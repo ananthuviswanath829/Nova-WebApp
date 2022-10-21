@@ -2,6 +2,8 @@ from django.core.management.base import BaseCommand #Ananthu
 from django.contrib.auth.models import User #Ananthu
 
 
+##Command to create admin
+#Author-Ananthu
 class Command(BaseCommand):
     help = 'Create admin'
 
