@@ -11,16 +11,33 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import axios from 'axios';
+
+
 const theme = createTheme();
 
 export default function SignUpPage() {
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+
+    if (data.get('password') === data.get('cpassword')) {
+      userSignUp(data);
+    }
+  };
+
+  const userSignUp = async data => {
+    const response = await axios.post('http://127.0.0.1:8000/api/user/signup', {
+      first_name: data.get('firstName'),
+      last_name: data.get('lastName'),
       email: data.get('email'),
       password: data.get('password'),
-    });
+    })
+
+    if (response.status === 200) {
+      console.log(response);
+    }
   };
 
   return (
@@ -89,7 +106,7 @@ export default function SignUpPage() {
                 <TextField
                   required
                   fullWidth
-                  name="password"
+                  name="cpassword"
                   label="Confirm Password"
                   type="password"
                   id="cpassword"
