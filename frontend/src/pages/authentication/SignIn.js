@@ -12,12 +12,13 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { useContext } from 'react';
-import AuthContext from '../context/AuthContext';
+import AuthContext from '../../context/AuthContext';
+
 
 const theme = createTheme();
 
 export default function SignInPage() {
-  let { loginUser } = useContext(AuthContext);
+  const { loginUser } = useContext(AuthContext);
 
   return (
     <ThemeProvider theme={theme}>

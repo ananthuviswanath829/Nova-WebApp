@@ -1,18 +1,36 @@
 import { Route, Routes } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthContext';
+import PrivateRoute from './utils/PrivateRoute';
 
-import SignInPage from './pages/SignIn';
-import SignUpPage from './pages/SignUp';
-import TopBar from './pages/TopBar';
+import SignInPage from './pages/authentication/SignIn';
+import SignUpPage from './pages/authentication/SignUp';
+import AccountVerificationPage from './pages/authentication/AccountVerification';
+import PageNotFoundPage from './pages/PageNotFound';
+import UserProfilePage from './pages/user/UserProfile';
+import FeedsPage from './pages/Feeds';
 
 const App = () => {
   return (
     <div>
       <Routes>
         <Route path='/signin' element={<AuthProvider><SignInPage /></AuthProvider>} />
-        <Route path='/signup' element={<SignUpPage />} />
-        <Route path='/' element={<TopBar />} />
+        <Route path='/signup' element={<AuthProvider><SignUpPage /></AuthProvider>} />
+
+        <Route path='/' element={
+                            <AuthProvider>
+                              <PrivateRoute Component={FeedsPage}/>
+                            </AuthProvider>}
+                          />
+
+        <Route path='/user/profile' element={
+                                    <AuthProvider>
+                                      <PrivateRoute Component={UserProfilePage}/>
+                                    </AuthProvider>}
+                                  />
+
+        <Route path='/account/verification/:code' element={<AccountVerificationPage />} />
+        <Route path='/page-not-found' element={<PageNotFoundPage />} />
       </Routes>
     </div>
   );

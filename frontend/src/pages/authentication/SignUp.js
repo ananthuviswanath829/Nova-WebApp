@@ -28,15 +28,15 @@ export default function SignUpPage() {
   };
 
   const userSignUp = async data => {
-    const response = await axios.post('http://127.0.0.1:8000/api/user/signup', {
-      first_name: data.get('firstName'),
-      last_name: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    })
-
-    if (response.status === 200) {
-      console.log(response);
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/user/signup', {
+        first_name: data.get('firstName'),
+        last_name: data.get('lastName'),
+        email: data.get('email'),
+        password: data.get('password'),
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 

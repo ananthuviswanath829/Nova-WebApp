@@ -8,6 +8,7 @@ const AuthContext = createContext();
 
 export default AuthContext;
 
+const baseURL = 'http://127.0.0.1:8000';
 
 export const AuthProvider = ({ children }) => {
 
@@ -20,21 +21,21 @@ export const AuthProvider = ({ children }) => {
 
   const loginUser = async e => {
     e.preventDefault();
-
     const formData = new FormData(e.currentTarget);
 
-    let response = await axios.post('http://127.0.0.1:8000/api/token/', {
-     'username': formData.get('email'), 
-     'password': formData.get('password'),
-    })
-    const data = response.data;
-    if (response.status === 200) {
+    try {
+      const response = await axios.post(`${baseURL}/api/token/`, {
+        'username': formData.get('email'), 
+        'password': formData.get('password'),
+      });
+
+      const data = response.data;
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem('authTokens', JSON.stringify(data));
       navigate('/');
-    } else {
-      console.log(response)
+    } catch (error) {
+      console.log(error)
       alert('Invalid credentials');
     }
   };

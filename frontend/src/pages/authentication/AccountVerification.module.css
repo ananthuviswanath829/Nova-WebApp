@@ -1,0 +1,54 @@
+#verificationDiv {border: 3px solid #f1f1f1;}
+
+.background {
+  background-size: cover;                      
+  background-repeat: no-repeat;
+  background-position: center center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.loginButton {
+  color: white;
+  padding: 10px 16px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  left: 45%;
+}
+
+
+.imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+}
+
+img.avatar {
+  width: 20%;
+  border-radius: 50%;
+}
+
+.verificationDiv {
+  width: 45%;
+  left: 50%;
+  margin: 0 auto;
+  margin-top: 5%;
+  z-index: 9999;
+}
+
+.verificationDiv h1 {
+  text-align: center;
+}
+
+.verificationDiv h3 {
+  text-align: center;
+  color: grey;
+}
+
+.verificationDiv #verificationDiv {
+  background-color: #e1e8e1;
+  border-radius: 10px;
+}

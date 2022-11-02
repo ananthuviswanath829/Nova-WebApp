@@ -16,6 +16,11 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 
+import { useContext } from 'react';
+import AuthContext from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -57,11 +62,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function TopBar() {
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const { logoutUser } = useContext(AuthContext);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -78,6 +87,16 @@ export default function TopBar() {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const signOutSession = () => {
+    logoutUser();
+    navigate('/signin');
+  };
+
+  const navigateToProfile = () => {
+    handleMenuClose();
+    navigate('/user/profile');
   };
 
   const menuId = 'primary-search-account-menu';
@@ -97,8 +116,8 @@ export default function TopBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={navigateToProfile}>Profile</MenuItem>
+      <MenuItem onClick={signOutSession}>Sign out</MenuItem>
     </Menu>
   );
 

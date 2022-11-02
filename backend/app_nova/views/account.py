@@ -18,3 +18,13 @@ class RegisterAPI(ExceptionHandlerMixin, APIView):
         user_register(request=request, **serializer.validated_data)
 
         return Response(status=status.HTTP_200_OK, data='User created successfully')
+
+
+##Class to check email verification token
+#Author-Ananthu
+class CheckVerificationToken(ExceptionHandlerMixin, APIView):
+
+    def get(self, request):
+        token = request.GET.get('token')
+        verify_token(token)
+        return Response(status=status.HTTP_200_OK, data='Token verified successfully')
