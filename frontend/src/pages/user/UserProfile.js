@@ -2,7 +2,10 @@ import TopBar from '../../component/layout/TopBar';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
+
 import UserCard from "../../component/user/UserCard";
+import SkillCard from '../../component/user/SkillCard';
+
 
 const theme = createTheme();
 
@@ -23,6 +26,7 @@ const UserProfilePage = () => {
       <CssBaseline />
       <Container maxWidth="lg">
         <UserCard data={userData} />
+        <SkillCard data={userData} />
       </Container>
       </ThemeProvider>
     </div>
