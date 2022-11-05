@@ -9,6 +9,8 @@ import AccountVerificationPage from './pages/authentication/AccountVerification'
 import PageNotFoundPage from './pages/PageNotFound';
 import UserProfilePage from './pages/user/UserProfile';
 import FeedsPage from './pages/Feeds';
+import UserProfileEditPage from './pages/user/UserProfileEdit';
+
 
 const App = () => {
   return (
@@ -26,6 +28,12 @@ const App = () => {
         <Route path='/user/profile' element={
                                     <AuthProvider>
                                       <PrivateRoute Component={UserProfilePage}/>
+                                    </AuthProvider>}
+                                  />
+        
+        <Route path='/user/profile/edit' element={
+                                    <AuthProvider>
+                                      <PrivateRoute Component={UserProfileEditPage}/>
                                     </AuthProvider>}
                                   />
 
