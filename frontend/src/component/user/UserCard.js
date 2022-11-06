@@ -7,25 +7,31 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 
+import { useNavigate } from 'react-router-dom';
+
+
 function UserCard(props) {
+  const navigate = useNavigate();
+
+  const navigateToSkillEdit = () => {
+    navigate('/user/profile/edit');
+  };
+
   const { data } = props;
 
   return (
     <Grid item xs={12} md={6} style={{marginTop: '15px'}}>
-      <CardActionArea component="a" href="#">
+      <CardActionArea component="a" onClick={navigateToSkillEdit}>
         <Card sx={{ display: 'flex' }}>
           <CardContent sx={{ flex: 1 }}>
             <Typography component="h2" variant="h5">
-              {data.title}
+              {`${data.firstName} ${data.lastName}`}
             </Typography>
             <Typography variant="subtitle1" color="text.secondary">
-              {data.date}
+              {data.dob}
             </Typography>
             <Typography variant="subtitle1" paragraph>
-              {data.description}
-            </Typography>
-            <Typography variant="subtitle1" color="primary">
-              Continue reading...
+              {data.email}
             </Typography>
           </CardContent>
           <CardMedia
@@ -42,11 +48,12 @@ function UserCard(props) {
 
 UserCard.propTypes = {
   data: PropTypes.shape({
-    date: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    dob: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
     imageLabel: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
   }).isRequired,
 };
 

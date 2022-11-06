@@ -14,7 +14,7 @@ function SkillCard(props) {
   const navigate = useNavigate();
 
   const { data } = props;
-
+  
   const navigateToSkillEdit = () => {
     navigate('/user/profile/edit');
   };
@@ -28,23 +28,17 @@ function SkillCard(props) {
               Skills
             </Typography>
             <div style={{marginTop: '15px'}}>
-              <Chip label="Chip Outlined" variant="outlined" style={{padding: '5px', margin: '5px'}} />
+              {
+                data.skillsList.map((val, index) => (
+                  <Chip label={`${val.skill} - ${val.experience} Years`} key={index} variant="outlined" style={{padding: '5px', margin: '5px'}} />
+                ))
+              }
             </div>
           </CardContent>
         </Card>
       </CardActionArea>
     </Grid>
   );
-}
-
-SkillCard.propTypes = {
-  data: PropTypes.shape({
-    date: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    imageLabel: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 export default SkillCard;

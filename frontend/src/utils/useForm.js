@@ -33,7 +33,7 @@ export const Form = props => {
   const classes = useStyles();
 
   return (
-    <form className={classes.root}>
+    <form className={classes.root} onSubmit={props.onSubmit}>
       {props.children}
     </form>
   );
