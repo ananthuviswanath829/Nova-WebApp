@@ -156,7 +156,7 @@ const UserProfileEditPage = () => {
   return (
     <div>
       <TopBar />
-      { resObj.showAlert && <SuccessAlert apiRes={apiRes} />}
+      { apiRes.showAlert && <SuccessAlert apiRes={apiRes} setApiRes={setApiRes} />}
       <Container maxWidth="lg" style={{marginTop: '15px'}}>
         <Form onSubmit={submitUserProfile}>
           <Grid style={{ margin: 'auto', width: '30%', display: 'block', padding: '8px' }}>

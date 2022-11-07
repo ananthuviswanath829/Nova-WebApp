@@ -15,6 +15,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { Button } from '@mui/material';
 
 import { useContext } from 'react';
 import AuthContext from '../../context/AuthContext';
@@ -61,7 +62,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function TopBar() {
+export default function TopBar(props) {
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -97,6 +98,10 @@ export default function TopBar() {
   const navigateToProfile = () => {
     handleMenuClose();
     navigate('/user/profile');
+  };
+
+  const navigateToSearch = () => {
+    if (props.searchTerm !== '') { navigate('/search/result'); }
   };
 
   const menuId = 'primary-search-account-menu';
@@ -201,8 +206,11 @@ export default function TopBar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              value={props.searchTerm}
+              onChange={e => props.setSearchTerm(e.target.value)}
             />
           </Search>
+          <Button variant="contained" onClick={navigateToSearch}>Search</Button>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">

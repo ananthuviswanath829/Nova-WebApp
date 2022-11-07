@@ -1,6 +1,9 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import TopBar from '../../component/layout/TopBar';
+import ErrorModal from '../../component/layout/ErrorModal';
+import SuccessAlert from '../../component/layout/SuccessAlert';
+
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
@@ -29,6 +32,16 @@ const UserProfilePage = () => {
 
   const {values, setValues} = useForm(initialValues);
 
+  const resObj = {
+    axiosError: false,
+    errMsg: '',
+    errHeading: '',
+    successMsg: '',
+    showAlert: false,
+  };
+
+  const [apiRes, setApiRes] = useState(resObj);
+
   useEffect(() => {
     getUserProfile();
   }, [])
@@ -46,18 +59,26 @@ const UserProfilePage = () => {
           dob: response.data.dob,
           skillsList: response.data.skills_list,
         });
+        setApiRes({
+          ...apiRes,
+          showAlert: true,
+          successMsg: 'Profile details get successfully',
+        });
       }
     } catch (err) {
-      console.log(err);
-      // setErrHeading('Project List');
-      // setErrMsg(JSON.stringify(err.response.data));
-      // setAxiosError(true);
+      setApiRes({
+        ...apiRes,
+        axiosError: true,
+        errMsg: JSON.stringify(err.response.data),
+        errHeading: 'Profile Get',
+      });
     }
   };
 
   return (
     <div>
       <TopBar />
+      { apiRes.showAlert && <SuccessAlert apiRes={apiRes} setApiRes={setApiRes} />}
       <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth="lg">
@@ -65,6 +86,7 @@ const UserProfilePage = () => {
         <SkillCard data={values} />
       </Container>
       </ThemeProvider>
+      <ErrorModal apiRes={apiRes} setApiRes={setApiRes} />
     </div>
   )
 };

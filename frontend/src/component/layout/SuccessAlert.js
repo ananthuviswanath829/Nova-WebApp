@@ -19,6 +19,10 @@ const SuccessAlert = props => {
   useEffect(() => {
     setTimeout(() => {
       setAlert(false);
+      props.setApiRes({
+        ...props.apiRes,
+        showAlert: false,
+      });
     }, 3000);
   }, []);
 

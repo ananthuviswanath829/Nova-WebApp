@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthContext';
+import { SearchProvider } from './context/SearchContext';
 import PrivateRoute from './utils/PrivateRoute';
 
 import SignInPage from './pages/authentication/SignIn';
@@ -10,6 +11,8 @@ import PageNotFoundPage from './pages/PageNotFound';
 import UserProfilePage from './pages/user/UserProfile';
 import FeedsPage from './pages/Feeds';
 import UserProfileEditPage from './pages/user/UserProfileEdit';
+import SearchResultPage from './pages/SearchResult';
+
 
 const App = () => {
   return (
@@ -20,19 +23,33 @@ const App = () => {
 
         <Route path='/' element={
                             <AuthProvider>
-                              <PrivateRoute Component={FeedsPage}/>
+                              <SearchProvider>
+                                <PrivateRoute Component={FeedsPage}/>
+                              </SearchProvider>
                             </AuthProvider>}
                           />
 
         <Route path='/user/profile' element={
                                     <AuthProvider>
-                                      <PrivateRoute Component={UserProfilePage}/>
+                                      <SearchProvider>
+                                        <PrivateRoute Component={UserProfilePage}/>
+                                      </SearchProvider>
                                     </AuthProvider>}
                                   />
         
         <Route path='/user/profile/edit' element={
                                     <AuthProvider>
-                                      <PrivateRoute Component={UserProfileEditPage}/>
+                                      <SearchProvider>
+                                        <PrivateRoute Component={UserProfileEditPage}/>
+                                      </SearchProvider>
+                                    </AuthProvider>}
+                                  />
+
+        <Route path='/search/result' element={
+                                    <AuthProvider>
+                                      <SearchProvider>
+                                        <PrivateRoute Component={SearchResultPage}/>
+                                      </SearchProvider>
                                     </AuthProvider>}
                                   />
 
