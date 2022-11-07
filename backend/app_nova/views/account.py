@@ -56,7 +56,7 @@ class UserProfileEditAPI(ExceptionHandlerMixin, APIView):
 
         user_profile_Edit(request=request, **serializer.validated_data)
 
-        return Response(status=status.HTTP_200_OK, data='User created successfully')
+        return Response(status=status.HTTP_200_OK, data='Profile edited successfully')
 
 
 ##Class to get all skills

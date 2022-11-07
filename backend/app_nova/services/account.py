@@ -107,16 +107,26 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
             userprofile_obj.dob = dob
             userprofile_obj.save()
 
+            UserSkill.objects.filter(is_active=True, user=user).update(is_active=False)
+            all_user_skills_qs = UserSkill.objects.filter(user=user)
+
             for skill in skills_list:
                 skill_obj = all_skills_qs.get(name=skill['skill'])
-
-                user_skill_obj = UserSkill(
-                    user = user,
-                    skill = skill_obj,
-                    experience = int(skill['experience']),
-                    created_by = user,
-                    modified_by = user,
-                )
+                user_Skill_qs = all_user_skills_qs.filter(skill=skill_obj)
+                if not user_Skill_qs.exists():
+                    user_skill_obj = UserSkill(
+                        user = user,
+                        skill = skill_obj,
+                        experience = int(skill['experience']),
+                        created_by = user,
+                        modified_by = user,
+                    )
+                else:
+                    user_skill_obj = user_Skill_qs[0]
+                    user_skill_obj.is_active = True
+                    user_skill_obj.experience = int(skill['experience'])
+                    user_skill_obj.modified_date = datetime.now()
+                    user_skill_obj.modified_by = user
                 user_skill_obj.full_clean()
                 user_skill_obj.save()
     except UserProfile.DoesNotExist:

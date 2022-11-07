@@ -11,7 +11,6 @@ import UserProfilePage from './pages/user/UserProfile';
 import FeedsPage from './pages/Feeds';
 import UserProfileEditPage from './pages/user/UserProfileEdit';
 
-
 const App = () => {
   return (
     <div>
