@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
@@ -14,6 +14,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 
 import { useForm, Form } from '../../utils/useForm';
 import useAxios from '../../utils/useAxios';
+import SearchContext from '../../context/SearchContext';
 
 import ReactImagePickerEditor from 'react-image-picker-editor';
 import 'react-image-picker-editor/dist/index.css'
@@ -25,6 +26,8 @@ import SuccessAlert from '../../component/layout/SuccessAlert';
 
 const UserProfileEditPage = () => {
   const api = useAxios();
+
+  const { searchTerm, setSearchTerm, getSearchResult, } = useContext(SearchContext);
 
   const initialValues = {
     firstName: '',
@@ -155,7 +158,7 @@ const UserProfileEditPage = () => {
 
   return (
     <div>
-      <TopBar />
+      <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} getSearchResult={getSearchResult} />
       { apiRes.showAlert && <SuccessAlert apiRes={apiRes} setApiRes={setApiRes} />}
       <Container maxWidth="lg" style={{marginTop: '15px'}}>
         <Form onSubmit={submitUserProfile}>

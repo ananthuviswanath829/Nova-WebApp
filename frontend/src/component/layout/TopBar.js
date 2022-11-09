@@ -101,7 +101,10 @@ export default function TopBar(props) {
   };
 
   const navigateToSearch = () => {
-    if (props.searchTerm !== '') { navigate('/search/result'); }
+    if (props.searchTerm !== '') { 
+      navigate('/search/result'); 
+      props.getSearchResult();
+    }
   };
 
   const menuId = 'primary-search-account-menu';

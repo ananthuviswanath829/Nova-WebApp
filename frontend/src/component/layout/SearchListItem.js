@@ -15,7 +15,7 @@ const SearchListItem = props => {
             <ImageIcon />
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary="Photos" secondary="Jan 9, 2014" />
+        <ListItemText primary={`${props.data.first_name} ${props.data.last_name}`} secondary={props.data.email} />
       </ListItem>
       <Divider variant="inset" component="li" />
     </>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useContext } from 'react';
 
 import TopBar from '../../component/layout/TopBar';
 import ErrorModal from '../../component/layout/ErrorModal';
@@ -13,12 +13,15 @@ import SkillCard from '../../component/user/SkillCard';
 
 import { useForm } from '../../utils/useForm';
 import useAxios from '../../utils/useAxios';
+import SearchContext from '../../context/SearchContext';
 
 
 const theme = createTheme();
 
 const UserProfilePage = () => {
   const api = useAxios();
+
+  const { searchTerm, setSearchTerm, getSearchResult, } = useContext(SearchContext);
 
   const initialValues = {
     firstName: '',
@@ -77,7 +80,7 @@ const UserProfilePage = () => {
 
   return (
     <div>
-      <TopBar />
+      <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} getSearchResult={getSearchResult} />
       { apiRes.showAlert && <SuccessAlert apiRes={apiRes} setApiRes={setApiRes} />}
       <ThemeProvider theme={theme}>
       <CssBaseline />

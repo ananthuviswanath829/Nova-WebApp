@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 
 import SearchContext from "../context/SearchContext";
-import useAxios from "../utils/useAxios";
 
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,57 +11,24 @@ import TopBar from "../component/layout/TopBar";
 import ErrorModal from "../component/layout/ErrorModal";
 import SuccessAlert from "../component/layout/SuccessAlert";
 import SearchListItem from "../component/layout/SearchListItem";
-
+import NoData from "../component/layout/NoData";
 
 const theme = createTheme();
 
 const SearchResultPage = () => {
-  const api = useAxios();
 
-  const { searchTerm, setSearchTerm } = useContext(SearchContext);
-
-  const resObj = {
-    axiosError: false,
-    errMsg: '',
-    errHeading: '',
-    successMsg: '',
-    showAlert: false,
-  };
-
-  const [apiRes, setApiRes] = useState(resObj);
-  const [values, setValues] = useState([]);
-
-  useEffect(() => {
-    getSearchResult();
-  }, [])
-
-  const getSearchResult = async () => {
-    try {
-      const response = await api.get('/api/search/result/get', {
-        params: {search_term: searchTerm}
-      });
-
-      if (response.status === 200) {
-        setValues(response.data);
-        setApiRes({
-          ...apiRes,
-          showAlert: true,
-          successMsg: 'Search result get successfully',
-        });
-      }
-    } catch (err) {
-      setApiRes({
-        ...apiRes,
-        axiosError: true,
-        errMsg: JSON.stringify(err.response.data),
-        errHeading: 'Profile Get',
-      });
-    }
-  };
+  const { 
+    searchTerm, 
+    setSearchTerm, 
+    getSearchResult, 
+    values, 
+    apiRes, 
+    setApiRes 
+  } = useContext(SearchContext);
 
   return (
     <div>
-      <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} getSearchResult={getSearchResult} />
       { apiRes.showAlert && <SuccessAlert apiRes={apiRes} setApiRes={setApiRes} />}
 
       <ThemeProvider theme={theme}>
@@ -77,10 +43,12 @@ const SearchResultPage = () => {
           >
           {
             values.map((data, index) => (
-              <SearchListItem key={index} />
+              <SearchListItem key={index} data={data} />
             ))
           }
           </List>
+
+          {values.length === 0 && <NoData />}
         </Container>
       </ThemeProvider>
 
