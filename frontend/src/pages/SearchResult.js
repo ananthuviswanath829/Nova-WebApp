@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 
 import SearchContext from "../context/SearchContext";
+import useAxios from "../utils/useAxios";
 
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,7 +17,9 @@ import NoData from "../component/layout/NoData";
 const theme = createTheme();
 
 const SearchResultPage = () => {
+  const api = useAxios();
 
+  const [friendId, setFriendId] = useState('');
   const { 
     searchTerm, 
     setSearchTerm, 
@@ -25,6 +28,29 @@ const SearchResultPage = () => {
     apiRes, 
     setApiRes 
   } = useContext(SearchContext);
+
+  const addFriend = async () => {
+    try {
+      const response = await api.post('/api/add/friend', {
+        friend_id: friendId,
+      })
+
+      if (response.status === 200) {
+        setApiRes({
+          ...apiRes,
+          showAlert: true,
+          successMsg: response.data,
+        });
+      }
+    } catch(err) {
+      setApiRes({
+        ...apiRes,
+        axiosError: true,
+        errMsg: JSON.stringify(err.response.data),
+        errHeading: 'Add Friend',
+      });
+    }
+  };
 
   return (
     <div>
@@ -43,7 +69,7 @@ const SearchResultPage = () => {
           >
           {
             values.map((data, index) => (
-              <SearchListItem key={index} data={data} />
+              <SearchListItem key={index} data={data} addFriend={addFriend} setFriendId={setFriendId} />
             ))
           }
           </List>
