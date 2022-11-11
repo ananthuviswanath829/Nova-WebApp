@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated #Ananthu
 
 from app_nova.services.usermngmnt import * #Ananthu
 from app_nova.serializers.usermngmnt import * #Ananthu
-
+from app_nova.serializers.account import UserProfileGetSerializer #Ananthu
 
 ##Class to search
 #Author-Ananthu
@@ -16,7 +16,7 @@ class SearchResultGetAPI(ExceptionHandlerMixin, APIView):
 
     def get(self, request):
         queryset = users_get(request)
-        serializer = UserSearchGetSerializer(queryset, many=True)
+        serializer = UserSearchGetSerializer(queryset, many=True, context={'request': request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
@@ -33,3 +33,15 @@ class AddFriendAPI(ExceptionHandlerMixin, APIView):
         add_friend(request=request, **serializer.validated_data)
 
         return Response(status=status.HTTP_200_OK, data='Friend request sent successfully')
+
+
+##Class to search
+#Author-Ananthu
+class PersonProfileGetAPI(ExceptionHandlerMixin, APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_obj = user_get(request)
+        serializer = UserProfileGetSerializer(user_obj)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)

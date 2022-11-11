@@ -19,7 +19,6 @@ const theme = createTheme();
 const SearchResultPage = () => {
   const api = useAxios();
 
-  const [friendId, setFriendId] = useState('');
   const { 
     searchTerm, 
     setSearchTerm, 
@@ -29,7 +28,7 @@ const SearchResultPage = () => {
     setApiRes 
   } = useContext(SearchContext);
 
-  const addFriend = async () => {
+  const addFriend = async friendId => {
     try {
       const response = await api.post('/api/add/friend', {
         friend_id: friendId,
@@ -41,6 +40,7 @@ const SearchResultPage = () => {
           showAlert: true,
           successMsg: response.data,
         });
+        getSearchResult();
       }
     } catch(err) {
       setApiRes({
@@ -69,7 +69,7 @@ const SearchResultPage = () => {
           >
           {
             values.map((data, index) => (
-              <SearchListItem key={index} data={data} addFriend={addFriend} setFriendId={setFriendId} />
+              <SearchListItem key={index} data={data} addFriend={addFriend} />
             ))
           }
           </List>

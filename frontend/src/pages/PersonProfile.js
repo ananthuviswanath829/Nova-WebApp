@@ -1,27 +1,28 @@
 import { useState, useEffect,useContext } from 'react';
 
-import TopBar from '../../component/layout/TopBar';
-import ErrorModal from '../../component/layout/ErrorModal';
-import SuccessAlert from '../../component/layout/SuccessAlert';
-
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 
-import UserCard from "../../component/user/UserCard";
-import SkillCard from '../../component/user/SkillCard';
+import TopBar from '../component/layout/TopBar';
+import ErrorModal from '../component/layout/ErrorModal';
+import SuccessAlert from '../component/layout/SuccessAlert';
+import UserCard from '../component/user/UserCard';
+import SkillCard from '../component/user/SkillCard';
 
-import { useForm } from '../../utils/useForm';
-import useAxios from '../../utils/useAxios';
-import SearchContext from '../../context/SearchContext';
-
+import useAxios from '../utils/useAxios';
+import { useForm } from '../utils/useForm';
+import SearchContext from '../context/SearchContext';
 
 const theme = createTheme();
 
-const UserProfilePage = () => {
+const PersonProfilePage = () => {
   const api = useAxios();
 
   const { searchTerm, setSearchTerm, getSearchResult } = useContext(SearchContext);
+  
+  const docUrIArr = window.location.href.split('/');
+  const userId = docUrIArr[docUrIArr.length - 1];
 
   const initialValues = {
     firstName: '',
@@ -46,12 +47,14 @@ const UserProfilePage = () => {
   const [apiRes, setApiRes] = useState(resObj);
 
   useEffect(() => {
-    getUserProfile();
+    getPersonProfile();
   }, [])
 
-  const getUserProfile = async () => {
+  const getPersonProfile = async () => {
     try {
-      const response = await api.get('/api/user/profile/get');
+      const response = await api.get('/api/person/profile/get', {
+        params: {user_id: userId}
+      });
 
       if (response.status === 200) {
         setValues({
@@ -78,7 +81,7 @@ const UserProfilePage = () => {
     }
   };
 
-  return (
+  return(
     <div>
       <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} getSearchResult={getSearchResult} />
       { apiRes.showAlert && <SuccessAlert apiRes={apiRes} setApiRes={setApiRes} />}
@@ -94,4 +97,4 @@ const UserProfilePage = () => {
   )
 };
 
-export default UserProfilePage;
+export default PersonProfilePage;

@@ -12,7 +12,7 @@ import UserProfilePage from './pages/user/UserProfile';
 import FeedsPage from './pages/Feeds';
 import UserProfileEditPage from './pages/user/UserProfileEdit';
 import SearchResultPage from './pages/SearchResult';
-
+import PersonProfilePage from './pages/PersonProfile';
 
 const App = () => {
   return (
@@ -53,6 +53,13 @@ const App = () => {
                                     </AuthProvider>}
                                   />
 
+        <Route path='/person/profile/:id' element={
+                                    <AuthProvider>
+                                      <SearchProvider>
+                                        <PrivateRoute Component={PersonProfilePage}/>
+                                      </SearchProvider>
+                                    </AuthProvider>}
+                                  />
         <Route path='/account/verification/:code' element={<AccountVerificationPage />} />
         <Route path='/page-not-found' element={<PageNotFoundPage />} />
       </Routes>

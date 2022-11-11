@@ -40,3 +40,15 @@ def add_friend(request, friend_id: int):
         err = f'User does not exist, id - {friend_id}'
         service_log.log_save('Add Friend', err, user.username, 0)
         raise ValidationError(err)
+
+
+##Function to get user obj for profile
+#Author-Ananthu
+def user_get(request):
+    try:
+        user_id= request.GET.get('user_id')
+        return User.objects.get(is_active=True, id=user_id)
+    except User.DoesNotExist:
+        err = f'User does not exist, id - {user_id}'
+        service_log.log_save('Person Profile Get', err, request.user.username, 0)
+        raise ValidationError(err)

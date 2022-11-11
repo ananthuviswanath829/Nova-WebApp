@@ -16,7 +16,9 @@ function SkillCard(props) {
   const { data } = props;
   
   const navigateToSkillEdit = () => {
-    navigate('/user/profile/edit');
+    const docUrIArr = window.location.href.split('/');
+    const urISuffix = docUrIArr[docUrIArr.length - 1];
+    if (urISuffix == 'profile') { navigate('/user/profile/edit'); }
   };
 
   return (

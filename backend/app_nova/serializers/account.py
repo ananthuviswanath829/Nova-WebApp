@@ -40,7 +40,10 @@ class UserProfileGetSerializer(serializers.Serializer):
     skills_list = serializers.SerializerMethodField()
 
     def get_dob(self, obj):
-        return obj.userprofile_set.get(is_active=True, user=obj).dob.strftime("%Y-%m-%d")
+        if obj.userprofile_set.get(is_active=True, user=obj).dob is not None:
+            return obj.userprofile_set.get(is_active=True, user=obj).dob.strftime("%Y-%m-%d")
+        else:
+            return ''
     
     def get_skills_list(self, obj):
         user_skills_qs = UserSkill.objects.select_related('skill').filter(is_active=True, user=obj)
