@@ -1,18 +1,18 @@
 import { useContext } from "react";
 
-import SearchContext from "../context/SearchContext";
-import useAxios from "../utils/useAxios";
+import SearchContext from "../../context/SearchContext";
+import useAxios from "../../utils/useAxios";
 
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 
-import TopBar from "../component/layout/TopBar";
-import ErrorModal from "../component/layout/ErrorModal";
-import SuccessAlert from "../component/layout/SuccessAlert";
-import SearchListItem from "../component/layout/SearchListItem";
-import NoData from "../component/layout/NoData";
+import TopBar from "../../component/layout/TopBar";
+import ErrorModal from "../../component/layout/ErrorModal";
+import SuccessAlert from "../../component/layout/SuccessAlert";
+import SearchListItem from "../../component/friend/SearchListItem";
+import NoData from "../../component/layout/NoData";
 
 const theme = createTheme();
 

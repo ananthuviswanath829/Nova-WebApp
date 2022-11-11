@@ -101,6 +101,11 @@ export default function TopBar(props) {
     navigate('/user/profile');
   };
 
+  const navigateToFriends = () => {
+    handleMenuClose();
+    navigate('/friends/list');
+  };
+
   const navigateToSearch = () => {
     if (props.searchTerm !== '') { 
       navigate('/search/result'); 
@@ -126,6 +131,7 @@ export default function TopBar(props) {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={navigateToProfile}>Profile</MenuItem>
+      <MenuItem onClick={navigateToFriends}>Friends</MenuItem>
       <MenuItem onClick={signOutSession}>Sign out</MenuItem>
     </Menu>
   );
@@ -150,14 +156,6 @@ export default function TopBar(props) {
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
-            <GroupIcon />
-          </Badge>
-        </IconButton>
-        <p>Friends</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
             <MailIcon />
           </Badge>
         </IconButton>
@@ -175,6 +173,20 @@ export default function TopBar(props) {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
+
+      <MenuItem>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <GroupIcon />
+        </IconButton>
+        <p>Profile</p>
+      </MenuItem>
+
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"

@@ -1,3 +1,5 @@
+from datetime import datetime #Ananthu
+
 from django.contrib.auth.models import User #Ananthu
 from django.db.models import Q #Ananthu
 from django.core.exceptions import ValidationError #Ananthu
@@ -52,3 +54,15 @@ def user_get(request):
         err = f'User does not exist, id - {user_id}'
         service_log.log_save('Person Profile Get', err, request.user.username, 0)
         raise ValidationError(err)
+
+
+##Function to accept friend request
+#Author-Ananthu
+def friend_request_accept(request, friend_id: int):
+    Friends.objects.filter(id=friend_id).update(is_accepted=True, modified_date=datetime.now(), modified_by=request.user)
+
+
+##Function to accept friend request
+#Author-Ananthu
+def friend_request_cancel(request, friend_id: int):
+    Friends.objects.filter(id=friend_id).update(is_active=False, modified_date=datetime.now(), modified_by=request.user)

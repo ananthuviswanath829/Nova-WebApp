@@ -11,8 +11,9 @@ import PageNotFoundPage from './pages/PageNotFound';
 import UserProfilePage from './pages/user/UserProfile';
 import FeedsPage from './pages/Feeds';
 import UserProfileEditPage from './pages/user/UserProfileEdit';
-import SearchResultPage from './pages/SearchResult';
-import PersonProfilePage from './pages/PersonProfile';
+import SearchResultPage from './pages/friend/SearchResult';
+import PersonProfilePage from './pages/friend/PersonProfile';
+import FriendsListPage from './pages/friend/FriendsList';
 
 const App = () => {
   return (
@@ -60,6 +61,15 @@ const App = () => {
                                       </SearchProvider>
                                     </AuthProvider>}
                                   />
+        
+        <Route path='/friends/list' element={
+                                    <AuthProvider>
+                                      <SearchProvider>
+                                        <PrivateRoute Component={FriendsListPage}/>
+                                      </SearchProvider>
+                                    </AuthProvider>}
+                                  />
+
         <Route path='/account/verification/:code' element={<AccountVerificationPage />} />
         <Route path='/page-not-found' element={<PageNotFoundPage />} />
       </Routes>

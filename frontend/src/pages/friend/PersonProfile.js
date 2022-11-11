@@ -4,15 +4,15 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 
-import TopBar from '../component/layout/TopBar';
-import ErrorModal from '../component/layout/ErrorModal';
-import SuccessAlert from '../component/layout/SuccessAlert';
-import UserCard from '../component/user/UserCard';
-import SkillCard from '../component/user/SkillCard';
+import TopBar from '../../component/layout/TopBar';
+import ErrorModal from '../../component/layout/ErrorModal';
+import SuccessAlert from '../../component/layout/SuccessAlert';
+import UserCard from '../../component/user/UserCard';
+import SkillCard from '../../component/user/SkillCard';
 
-import useAxios from '../utils/useAxios';
-import { useForm } from '../utils/useForm';
-import SearchContext from '../context/SearchContext';
+import useAxios from '../../utils/useAxios';
+import { useForm } from '../../utils/useForm';
+import SearchContext from '../../context/SearchContext';
 
 const theme = createTheme();
 
