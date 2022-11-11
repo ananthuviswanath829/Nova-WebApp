@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -18,7 +17,7 @@ function SkillCard(props) {
   const navigateToSkillEdit = () => {
     const docUrIArr = window.location.href.split('/');
     const urISuffix = docUrIArr[docUrIArr.length - 1];
-    if (urISuffix == 'profile') { navigate('/user/profile/edit'); }
+    if (urISuffix === 'profile') { navigate('/user/profile/edit'); }
   };
 
   return (

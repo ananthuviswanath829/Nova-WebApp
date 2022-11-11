@@ -16,7 +16,7 @@ function UserCard(props) {
   const navigateToSkillEdit = () => {
     const docUrIArr = window.location.href.split('/');
     const urISuffix = docUrIArr[docUrIArr.length - 1];
-    if (urISuffix == 'profile') { navigate('/user/profile/edit'); }
+    if (urISuffix === 'profile') { navigate('/user/profile/edit'); }
   };
 
   const { data } = props;
