@@ -14,6 +14,7 @@ import UserProfileEditPage from './pages/user/UserProfileEdit';
 import SearchResultPage from './pages/friend/SearchResult';
 import PersonProfilePage from './pages/friend/PersonProfile';
 import FriendsListPage from './pages/friend/FriendsList';
+import FriendRequestListPage from './pages/friend/FriendRequestList';
 
 const App = () => {
   return (
@@ -66,6 +67,14 @@ const App = () => {
                                     <AuthProvider>
                                       <SearchProvider>
                                         <PrivateRoute Component={FriendsListPage}/>
+                                      </SearchProvider>
+                                    </AuthProvider>}
+                                  />
+        
+        <Route path='/friend/requests' element={
+                                    <AuthProvider>
+                                      <SearchProvider>
+                                        <PrivateRoute Component={FriendRequestListPage}/>
                                       </SearchProvider>
                                     </AuthProvider>}
                                   />

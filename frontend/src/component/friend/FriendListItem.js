@@ -13,16 +13,8 @@ const btnStyle = {
   margin: 'auto'
 };
 
-const SearchListItem = props => {
+const FriendListItem = props => {
   const navigate = useNavigate();
-
-  const handleAccpetRequest = () => {
-    props.acceptRequest(props.data.id);
-  };
-
-  const handleCancelRequest = () => {
-    props.cancelRequest(props.data.id);
-  };
 
   const navigateToProfile = () => {
     navigate(`/person/profile/${props.data.user_id}`);
@@ -39,33 +31,11 @@ const SearchListItem = props => {
           </ListItemAvatar>
           <ListItemText primary={`${props.data.first_name} ${props.data.last_name}`} secondary={props.data.email} />
         </ListItem>
-        {props.data.status === 'request received' && <Button 
-                                                  variant="outlined" 
-                                                  style={btnStyle} 
-                                                  onClick={handleAccpetRequest}
-                                                >
-                                                  Accept
-                                                </Button>}
-        {props.data.status === 'request sent' && <Button 
-                                                    variant="outlined" 
-                                                    color='secondary' 
-                                                    style={btnStyle}
-                                                    size='small'
-                                                    onClick={handleCancelRequest}
-                                                  >
-                                                    Cancel Request
-                                                  </Button>}
-        {props.data.status === 'friends' && <Button 
-                                              variant="outlined" 
-                                              color='success' 
-                                              style={btnStyle} 
-                                              >
-                                                Friends
-                                              </Button>}
+        <Button variant="outlined" color='success' style={btnStyle}>Message</Button>
       </div>
       <Divider variant="inset" component="li" />
     </>
   );
 };
 
-export default SearchListItem;
+export default FriendListItem;

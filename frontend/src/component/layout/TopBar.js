@@ -106,6 +106,14 @@ export default function TopBar(props) {
     navigate('/friends/list');
   };
 
+  const navigateToHome = () => {
+    navigate('/');
+  };
+  
+  const navigateToFriendRequests = () => {
+    navigate('/friend/requests');
+  };
+
   const navigateToSearch = () => {
     if (props.searchTerm !== '') { 
       navigate('/search/result'); 
@@ -220,6 +228,8 @@ export default function TopBar(props) {
             noWrap
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
+            style={{ cursor: 'pointer'}}
+            onClick={navigateToHome}
           >
             NOVA
           </Typography>
@@ -242,6 +252,13 @@ export default function TopBar(props) {
                 <MailIcon />
               </Badge>
             </IconButton>
+
+            <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={navigateToFriendRequests}>
+              <Badge badgeContent={4} color="error">
+                <GroupIcon />
+              </Badge>
+            </IconButton>
+
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
