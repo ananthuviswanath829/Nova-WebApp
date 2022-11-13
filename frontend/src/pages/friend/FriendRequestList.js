@@ -59,6 +59,54 @@ const FriendRequestListPage = () => {
     }
   };
 
+  const acceptRequest = async friendId => {
+    try {
+      const response = await api.post('/api/friend/request/accept', {
+        friend_id: friendId,
+      })
+
+      if (response.status === 200) {
+        setApiRes({
+          ...apiRes,
+          showAlert: true,
+          successMsg: response.data,
+        });
+        getFriendRequestList();
+      }
+    } catch(err) {
+      setApiRes({
+        ...apiRes,
+        axiosError: true,
+        errMsg: JSON.stringify(err.response.data),
+        errHeading: 'Accept Request',
+      });
+    }
+  };
+
+  const cancelRequest = async friendId => {
+    try {
+      const response = await api.post('/api/friend/request/cancel', {
+        friend_id: friendId,
+      })
+
+      if (response.status === 200) {
+        setApiRes({
+          ...apiRes,
+          showAlert: true,
+          successMsg: response.data,
+        });
+        getFriendRequestList();
+      }
+    } catch(err) {
+      setApiRes({
+        ...apiRes,
+        axiosError: true,
+        errMsg: JSON.stringify(err.response.data),
+        errHeading: 'Cancel Request',
+      });
+    }
+  };
+
   return(
     <div>
       <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} getSearchResult={getSearchResult} />
@@ -77,7 +125,7 @@ const FriendRequestListPage = () => {
           >
           {
             friendsList.map((data, index) => (
-              <FriendRequestListItem key={index} data={data} />
+              <FriendRequestListItem key={index} data={data} acceptRequest={acceptRequest} cancelRequest={cancelRequest} />
             ))
           }
           </List>

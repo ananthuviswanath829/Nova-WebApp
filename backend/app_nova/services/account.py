@@ -98,13 +98,13 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
         userprofile_obj = UserProfile.objects.get(is_active=True, user=user)
         all_skills_qs = Skill.objects.filter(is_active=True)
 
-        image = base64.b64decode(str(profile_pic))       
-        fileName = 'test.jpeg'
+        # image = base64.b64decode(str(profile_pic))       
+        # fileName = 'test.jpeg'
 
-        # imagePath = FILE_UPLOAD_DIR + fileName
+        # # imagePath = FILE_UPLOAD_DIR + fileName
 
-        img = pil_img.open(BytesIO(image))
-        img.save(fileName, 'jpeg')
+        # img = pil_img.open(BytesIO(image))
+        # img.save(fileName, 'jpeg')
 
         with transaction.atomic():
             user.first_name = first_name

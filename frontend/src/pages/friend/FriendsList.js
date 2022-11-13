@@ -59,54 +59,6 @@ const FriendsListPage = () => {
     }
   };
 
-  const acceptRequest = async friendId => {
-    try {
-      const response = await api.post('/api/friend/request/accept', {
-        friend_id: friendId,
-      })
-
-      if (response.status === 200) {
-        setApiRes({
-          ...apiRes,
-          showAlert: true,
-          successMsg: response.data,
-        });
-        getFriendsList();
-      }
-    } catch(err) {
-      setApiRes({
-        ...apiRes,
-        axiosError: true,
-        errMsg: JSON.stringify(err.response.data),
-        errHeading: 'Add Friend',
-      });
-    }
-  };
-
-  const cancelRequest = async friendId => {
-    try {
-      const response = await api.post('/api/friend/request/cancel', {
-        friend_id: friendId,
-      })
-
-      if (response.status === 200) {
-        setApiRes({
-          ...apiRes,
-          showAlert: true,
-          successMsg: response.data,
-        });
-        getFriendsList();
-      }
-    } catch(err) {
-      setApiRes({
-        ...apiRes,
-        axiosError: true,
-        errMsg: JSON.stringify(err.response.data),
-        errHeading: 'Add Friend',
-      });
-    }
-  };
-
   return(
     <div>
       <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} getSearchResult={getSearchResult} />
@@ -125,7 +77,7 @@ const FriendsListPage = () => {
           >
           {
             friendsList.map((data, index) => (
-              <FriendListItem key={index} data={data} acceptRequest={acceptRequest} cancelRequest={cancelRequest} />
+              <FriendListItem key={index} data={data} />
             ))
           }
           </List>
