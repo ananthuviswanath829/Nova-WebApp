@@ -19,7 +19,7 @@ class RegisterAPI(ExceptionHandlerMixin, APIView):
 
         user_register(request=request, **serializer.validated_data)
 
-        return Response(status=status.HTTP_200_OK, data='User created successfully')
+        return Response(status=status.HTTP_200_OK, data='User created successfully. Please verify your email')
 
 
 ##Class to check email verification token

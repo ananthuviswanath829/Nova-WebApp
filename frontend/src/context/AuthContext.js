@@ -18,6 +18,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const resObj = {
+    axiosError: false,
+    errMsg: '',
+    errHeading: '',
+    successMsg: '',
+    showAlert: false,
+  };
+
+  const [apiRes, setApiRes] = useState(resObj);
 
   const loginUser = async e => {
     e.preventDefault();
@@ -34,9 +43,13 @@ export const AuthProvider = ({ children }) => {
       setUser(jwt_decode(data.access));
       localStorage.setItem('authTokens', JSON.stringify(data));
       navigate('/');
-    } catch (error) {
-      console.log(error)
-      alert('Invalid credentials');
+    } catch (err) {
+      setApiRes({
+        ...apiRes,
+        axiosError: true,
+        errMsg: JSON.stringify(err.response.data),
+        errHeading: 'Sign In',
+      });
     }
   };
 
@@ -52,7 +65,9 @@ export const AuthProvider = ({ children }) => {
     setUser: setUser,
     setAuthTokens: setAuthTokens,
     loginUser: loginUser,
-    logoutUser: logoutUser
+    logoutUser: logoutUser,
+    apiRes: apiRes,
+    setApiRes: setApiRes,
   };
 
   useEffect(() => {
