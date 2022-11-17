@@ -8,4 +8,6 @@ from .userskill import UserSkill #Ananthu
 
 from .friends import Friends #Ananthu
 
+from .usertask import UserTask #Ananthu
+
 from .log import Log #Ananthu
