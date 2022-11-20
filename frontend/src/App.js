@@ -15,6 +15,7 @@ import SearchResultPage from './pages/friend/SearchResult';
 import PersonProfilePage from './pages/friend/PersonProfile';
 import FriendsListPage from './pages/friend/FriendsList';
 import FriendRequestListPage from './pages/friend/FriendRequestList';
+import ChatPage from './pages/message/Chat';
 
 const App = () => {
   return (
@@ -78,6 +79,14 @@ const App = () => {
                                       </SearchProvider>
                                     </AuthProvider>}
                                   />
+        
+        <Route path='/chat' element={
+                                <AuthProvider>
+                                  <SearchProvider>
+                                    <PrivateRoute Component={ChatPage}/>
+                                  </SearchProvider>
+                                </AuthProvider>}
+                              />
 
         <Route path='/account/verification/:code' element={<AccountVerificationPage />} />
         <Route path='/page-not-found' element={<PageNotFoundPage />} />
