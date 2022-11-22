@@ -1,6 +1,7 @@
 from .image import Image #Ananthu
 
 from .userprofile import UserProfile #Ananthu
+from .searchpreference import SearchPreference # Ananthu
 from .emailverification import EmailVerificationCode #Ananthu
 
 from .skill import Skill #Ananthu

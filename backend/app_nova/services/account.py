@@ -15,7 +15,7 @@ from django.conf import settings #Ananthu
 from django.db import transaction #Ananthu
 
 from app_nova.services import service_log #Ananthu
-from app_nova.models import UserProfile, EmailVerificationCode, Skill, UserSkill #Ananthu
+from app_nova.models import UserProfile, EmailVerificationCode, Skill, UserSkill, SearchPreference #Ananthu
 
 
 ##Function to register
@@ -37,6 +37,11 @@ def user_register(request, first_name: str, last_name: str, email: str, password
     characters = string.ascii_letters + string.digits
     token = ''.join(random.choice(characters) for i in range(20))
 
+    experience = 'Junior'
+    per_hour_cost = 'Low'
+    availability = 'Medium'
+    rating = 'Good'
+
     with transaction.atomic():
         user_obj = User(
             first_name = first_name,
@@ -53,6 +58,18 @@ def user_register(request, first_name: str, last_name: str, email: str, password
         )
         userprofile_obj.full_clean()
         userprofile_obj.save()
+
+        preference_obj = SearchPreference(
+            user = user_obj,
+            experience = experience,
+            per_hour_cost = per_hour_cost,
+            availability = availability,
+            rating = rating,
+            created_by = user_obj,
+            modified_by = user_obj,
+        )
+        preference_obj.full_clean()
+        preference_obj.save()
 
         email_code_obj = EmailVerificationCode(
             user = user_obj,
@@ -90,13 +107,15 @@ def verify_token(token):
 
 ##Function to edit user profile
 #Author-Ananthu
-def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob: datetime, profile_pic: str, skills_list: str):
+def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob: datetime, profile_pic: str, skills_list: str, 
+                        experience: str, per_hour_rate: str, availability: str, rating: str):
     try:
         skills_list = json.loads(skills_list)
         
         user = request.user
         userprofile_obj = UserProfile.objects.get(is_active=True, user=user)
         all_skills_qs = Skill.objects.filter(is_active=True)
+        search_preference_obj = SearchPreference.objects.get(is_active=True, user=user)
 
         # image = base64.b64decode(str(profile_pic))       
         # fileName = 'test.jpeg'
@@ -114,6 +133,12 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
 
             userprofile_obj.dob = dob
             userprofile_obj.save()
+
+            search_preference_obj.experience = experience
+            search_preference_obj.per_hour_rate = per_hour_rate
+            search_preference_obj.availability = availability
+            search_preference_obj.rating = rating
+            search_preference_obj.save()
 
             UserSkill.objects.filter(is_active=True, user=user).update(is_active=False)
             all_user_skills_qs = UserSkill.objects.filter(user=user)
@@ -142,6 +167,10 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
         service_log.log_save('Profile Edit', err, user.username, 0)
         raise ValidationError(err)
     except UserProfile.DoesNotExist:
+        err = 'Userprofile does not exist'
+        service_log.log_save('Profile Edit', err, user.username, 0)
+        raise ValidationError(err)
+    except SearchPreference.DoesNotExist:
         err = 'Userprofile does not exist'
         service_log.log_save('Profile Edit', err, user.username, 0)
         raise ValidationError(err)

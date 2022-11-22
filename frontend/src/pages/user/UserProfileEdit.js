@@ -34,9 +34,19 @@ const UserProfileEditPage = () => {
     lastName: '',
     email: '',
     dob: new Date(),
+    experience: '',
+    perHourRate: '',
+    availability: '',
+    rating: '',
   };
 
   const {values, setValues, handleInputChange} = useForm(initialValues);
+
+  const preferenceList = {
+    experience: ['Junior', 'Mid Level', 'Senior'],
+    availability: ['Low', 'Medium', 'High'],
+    rating: ['Very Poor', 'Poor', 'Weak', 'Good', 'Very Good', 'Excellent'],
+  };
 
   const config2 = {
     borderRadius: '8px',
@@ -110,6 +120,10 @@ const UserProfileEditPage = () => {
           lastName: response.data.last_name,
           email: response.data.email,
           dob: new Date(response.data.dob),
+          experience: response.data.experience,
+          perHourRate: response.data.per_hour_rate,
+          availability: response.data.availability,
+          rating: response.data.rating,
         });
         setExperienceList(response.data.skills_list);
       }
@@ -137,6 +151,10 @@ const UserProfileEditPage = () => {
         dob: values.dob,
         profile_pic: imageSrc,
         skills_list: JSON.stringify(experienceList),
+        experience: values.experience,
+        per_hour_rate: values.perHourRate,
+        availability: values.availability,
+        rating: values.rating,
       });
 
       if (response.status === 200) {
@@ -279,6 +297,86 @@ const UserProfileEditPage = () => {
                 />
               ))
             }
+          </Grid>
+
+          <Grid style={{margin: '10px'}}>
+            <Typography component="h2" variant="h5">Search Preference</Typography>
+
+            <Grid container spacing={2} style={{display : 'flex', marginTop: '5px'}}>
+              <Grid item xs={12} md={6}>
+                <Select
+                  labelId="demo-simple-select-label1"
+                  id="demo-simple-select1"
+                  value={values.experience}
+                  label="Experience"
+                  name='experience'
+                  onChange={handleInputChange('experience')}
+                  style={{width: '100%'}}
+                >
+                  {
+                    preferenceList.experience.map((data, index) => (
+                      <MenuItem key={index} value={data}>{data}</MenuItem>
+                    ))
+                  }
+                </Select>
+              </Grid>
+
+              <Grid item xs={12} md={6} style={{marginTop: '0px'}}>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={values.perHourRate}
+                    label="Per Hour Cost"
+                    name='perHourRate'
+                    onChange={handleInputChange('perHourRate')}
+                    style={{width: '100%'}}
+                  >
+                    {
+                      preferenceList.availability.map((data, index) => (
+                        <MenuItem key={index} value={data}>{data}</MenuItem>
+                      ))
+                    }
+                  </Select>
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2} style={{display : 'flex', marginTop: '5px'}}>
+              <Grid item xs={12} md={6}>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={values.availability}
+                  label="Availability"
+                  name='availability'
+                  onChange={handleInputChange('availability')}
+                  style={{width: '100%'}}
+                >
+                  {
+                    preferenceList.availability.map((data, index) => (
+                      <MenuItem key={index} value={data}>{data}</MenuItem>
+                    ))
+                  }
+                </Select>
+              </Grid>
+
+              <Grid item xs={12} md={6} style={{marginTop: '0px'}}>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={values.rating}
+                    label="Rating"
+                    name='rating'
+                    onChange={handleInputChange('rating')}
+                    style={{width: '100%'}}
+                  >
+                    {
+                      preferenceList.rating.map((data, index) => (
+                        <MenuItem key={index} value={data}>{data}</MenuItem>
+                      ))
+                    }
+                  </Select>
+              </Grid>
+            </Grid>
           </Grid>
 
           <Grid>

@@ -10,6 +10,7 @@ import Container from '@mui/material/Container';
 
 import UserCard from "../../component/user/UserCard";
 import SkillCard from '../../component/user/SkillCard';
+import SearchPreference from '../../component/user/SearchPreference';
 
 import { useForm } from '../../utils/useForm';
 import useAxios from '../../utils/useAxios';
@@ -31,6 +32,10 @@ const UserProfilePage = () => {
     skillsList: [],
     image: 'https://source.unsplash.com/random',
     imageLabel: 'Image Text',
+    experience: '',
+    perHourRate: '',
+    availability: '',
+    rating: '',
   };
 
   const {values, setValues} = useForm(initialValues);
@@ -61,6 +66,10 @@ const UserProfilePage = () => {
           email: response.data.email,
           dob: response.data.dob,
           skillsList: response.data.skills_list,
+          experience: response.data.experience,
+          perHourRate: response.data.per_hour_rate,
+          availability: response.data.availability,
+          rating: response.data.rating,
         });
         setApiRes({
           ...apiRes,
@@ -87,6 +96,7 @@ const UserProfilePage = () => {
       <Container maxWidth="lg">
         <UserCard data={values} />
         <SkillCard data={values} />
+        <SearchPreference data={values} />
       </Container>
       </ThemeProvider>
       <ErrorModal apiRes={apiRes} setApiRes={setApiRes} />
