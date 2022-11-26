@@ -11,8 +11,11 @@ def setup_system():
     hourly_rate = ctrl.Antecedent(np.arange(0, 91, 1), 'Hourly Rate')
     availability = ctrl.Antecedent(np.arange(0, 41, 1), 'Availability')
     rating = ctrl.Antecedent(np.arange(0, 6, 1), 'Rating')
+
+    user_experience = ctrl.Antecedent(np.arange(0, 31, 1), 'Experience')
     user_rating = ctrl.Antecedent(np.arange(0, 6, 1), 'User Rating')
     user_hourly_rate = ctrl.Antecedent(np.arange(0, 6, 1), 'User Hourly Rate')
+    user_availability = ctrl.Antecedent(np.arange(0, 41, 1), 'Availability')
 
     recommend = ctrl.Consequent(np.arange(0, 1.1, 0.1), 'Recommendation Score')
 
@@ -46,12 +49,31 @@ def setup_system():
     user_rating['Very Good'] = fuzz.trimf(user_rating.universe, [3, 4, 5])
     user_rating['Excellent'] = fuzz.trimf(user_rating.universe, [4, 5, 5])
 
+    user_availability['Low'] = fuzz.trapmf(user_availability.universe, [0, 0, 5, 10])
+    user_availability['Medium'] = fuzz.trapmf(user_availability.universe, [5, 10, 15, 20])
+    user_availability['High'] = fuzz.trapmf(user_availability.universe, [15, 20, 41, 41])
+
+    user_experience['Junior'] = fuzz.trapmf(user_experience.universe, [0, 0, 4, 6])
+    user_experience['Mid Level'] = fuzz.trapmf(user_experience.universe, [4, 6, 9, 12])
+    user_experience['Senior'] = fuzz.trapmf(user_experience.universe, [9, 12, 31, 31])
+
     recommend['Recommend'] = fuzz.smf(recommend.universe, 0, 1)
 
-    rule_1 = ctrl.Rule(user_hourly_rate['High'] & user_rating['Excellent'] & (
-        experience['Senior'] | rating['Excellent'] | hourly_rate['High'] | availability['High'] ),
-        recommend['Recommend'])
+    rule_1 = ctrl.Rule(user_hourly_rate['High'] & user_rating['Excellent'] & user_availability['High'] & user_experience['Senior'] (
+        experience['Senior'] | rating['Excellent'] | hourly_rate['High'] | availability['High'] ), recommend['Recommend'])
     
+    rule_2 = ctrl.Rule(user_hourly_rate['High'] & user_rating['Excellent'] & user_availability['High'] & user_experience['Mid Level'] (
+        experience['Mid Level'] | rating['Excellent'] | hourly_rate['High'] | availability['High'] ), recommend['Recommend'])
+    
+    rule_3 = ctrl.Rule(user_hourly_rate['High'] & user_rating['Excellent'] & user_availability['High'] & user_experience['Junior'] (
+        experience['Junior'] | rating['Excellent'] | hourly_rate['High'] | availability['High'] ), recommend['Recommend'])
+
+    rule_4 = ctrl.Rule(user_hourly_rate['High'] & user_rating['Excellent'] & user_availability['Medium'] & user_experience['Junior'] (
+        experience['Junior'] | rating['Excellent'] | hourly_rate['High'] | availability['Medium'] ), recommend['Recommend'])
+
+    rule_5 = ctrl.Rule(user_experience['Mid Level'] & user_hourly_rate['High'] & user_rating['Excellent'] & user_availability['Medium'] &  (
+        experience['Mid Level'] | rating['Excellent'] | hourly_rate['High'] | availability['High'] ), recommend['Recommend'])
+
     rule_2 = ctrl.Rule(user_hourly_rate['High'] & user_rating['Very Good'] & (
         experience['Senior'] | rating['Very Good'] | hourly_rate['High'] | availability['High'] ),
         recommend['Recommend'])

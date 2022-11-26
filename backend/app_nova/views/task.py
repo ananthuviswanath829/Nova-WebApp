@@ -23,7 +23,6 @@ class TaskCreateAPI(ExceptionHandlerMixin, APIView):
         return Response(status=status.HTTP_200_OK, data='Task created successfully')
 
 
-
 ##Class to edit task
 #Author-Ananthu
 class TaskEditAPI(ExceptionHandlerMixin, APIView):
@@ -59,3 +58,13 @@ class TaskDetailsGetAPI(ExceptionHandlerMixin, APIView):
     def get(self, request):
         serializer = TaskDetailsGetSerializer(task_get(request))
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+##Class to get task details
+#Author-Ananthu
+class WeeklyTasksGetAPI(ExceptionHandlerMixin, APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response(status=status.HTTP_200_OK, data=weekly_tasks_get(request))

@@ -7,7 +7,9 @@ from django.contrib.auth.models import User #Ananthu
 class UserTask(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     task_name = models.TextField()
-    hours = models.IntegerField()
+    task_date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)

@@ -5,7 +5,9 @@ from rest_framework import serializers #Ananthu
 #Author-Ananthu
 class TaskCreateSerializer(serializers.Serializer):
     task_name = serializers.CharField(required=True, allow_blank=False)
-    hours = serializers.IntegerField(required=True)
+    task_date = serializers.DateField(required=True)
+    start_time = serializers.TimeField(required=True)
+    end_time = serializers.TimeField(required=True)
 
 
 ##Serializer for task edit
@@ -13,7 +15,9 @@ class TaskCreateSerializer(serializers.Serializer):
 class TaskEditSerializer(serializers.Serializer):
     task_id = serializers.IntegerField(required=True)
     task_name = serializers.CharField(required=True, allow_blank=False)
-    hours = serializers.IntegerField(required=True)
+    task_date = serializers.DateField(required=True)
+    start_time = serializers.TimeField(required=True)
+    end_time = serializers.TimeField(required=True)
 
 
 ##Serializer for task details get
@@ -21,4 +25,15 @@ class TaskEditSerializer(serializers.Serializer):
 class TaskDetailsGetSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     task_name = serializers.CharField()
-    hours = serializers.IntegerField()
+    task_date = serializers.SerializerMethodField()
+    start_time = serializers.SerializerMethodField()
+    end_time = serializers.SerializerMethodField()
+
+    def get_task_date(self, obj):
+        return obj.task_date.strftime('%d/%m/%Y')
+    
+    def get_start_time(self, obj):
+        return obj.start_time.strftime('%H:%M')
+    
+    def get_end_time(self, obj):
+        return obj.end_time.strftime('%H:%M')

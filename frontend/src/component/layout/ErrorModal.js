@@ -18,7 +18,7 @@ const style = {
 const ErrorModal = props => {
 
   const handleClose = () => {
-    props.setError({
+    props.setApiRes({
       ...props.apiRes, 
       axiosError: false,
     });
