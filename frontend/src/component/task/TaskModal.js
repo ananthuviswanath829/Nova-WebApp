@@ -71,6 +71,9 @@ const TaskModal = props => {
               type="date"
               required
               value={values.taskDate}
+              InputProps={{
+                inputProps: { min: new Date().toISOString().slice(0, 10) }
+              }}
               onChange={handleInputChange('taskDate')}
             />
 
@@ -91,6 +94,9 @@ const TaskModal = props => {
               type="time"
               required
               value={values.endTime}
+              InputProps={{
+                inputProps: { min: values.startTime }
+              }}
               onChange={handleInputChange('endTime')}
             />
 
