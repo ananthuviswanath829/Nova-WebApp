@@ -30,7 +30,7 @@ class TaskDetailsGetSerializer(serializers.Serializer):
     end_time = serializers.SerializerMethodField()
 
     def get_task_date(self, obj):
-        return obj.task_date.strftime('%d/%m/%Y')
+        return obj.task_date.strftime('%Y-%m-%d')
     
     def get_start_time(self, obj):
         return obj.start_time.strftime('%H:%M')
