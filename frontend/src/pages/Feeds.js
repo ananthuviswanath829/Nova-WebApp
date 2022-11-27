@@ -6,7 +6,7 @@ import useAxios from "../utils/useAxios";
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
-import { Button } from "@mui/material";
+import { Button, ButtonGroup } from "@mui/material";
 
 import TopBar from "../component/layout/TopBar";
 import ErrorModal from '../component/layout/ErrorModal';
@@ -44,10 +44,13 @@ const FeedsPage = () => {
 
   const [apiRes, setApiRes] = useState(resObj);
   const [taskList, setTaskList] = useState([]);
+  const [count, setCount] = useState(0);
 
   const tasksListGet = async () => {
     try {
-      const response = await api.get('/api/task/list/get');
+      const response = await api.get('/api/task/list/get', {
+        params: {count: count}
+      });
 
       if (response.status === 200) {
         setTaskList(response.data);
@@ -72,6 +75,13 @@ const FeedsPage = () => {
 
   const openTaskModal = () => {
     setTaskId('');
+    setInitialData({
+      ...initialData,
+      taskName: '',
+      taskDate: '',
+      startTime: '',
+      endTime: '',
+    });
     setModalIsOpen(true);
   };
 
@@ -188,6 +198,16 @@ const FeedsPage = () => {
     }
   };
 
+  const handlePreviousClick = () => {
+    setCount(count - 7);
+    tasksListGet();
+  };
+
+  const handleNextClick = () => {
+    setCount(count + 7);
+    tasksListGet();
+  };
+
   return (
     <div>
       <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} getSearchResult={getSearchResult} />
@@ -195,7 +215,11 @@ const FeedsPage = () => {
       <ThemeProvider theme={theme}>
       <CssBaseline />
         <Container maxWidth="lg">
-          <Button variant="outlined" style={{margin: '10px', right: 0}} onClick={openTaskModal}>Create Task</Button>
+          <ButtonGroup size="large" aria-label="large button group" style={{marginTop: '10px'}}>
+            <Button variant="outlined" onClick={handlePreviousClick}>Previous Week</Button>
+            <Button variant="outlined" onClick={openTaskModal}>Create Task</Button>
+            <Button variant="outlined" onClick={handleNextClick}>Next Week</Button>
+          </ButtonGroup>
           <div style={{display: 'flex', marginTop: '10px'}}>
             {taskList.map((data, index) => (<DayItem key={index} data={data} taskDetailsGet={taskDetailsGet} setTaskId={setTaskId} />))}
           </div>

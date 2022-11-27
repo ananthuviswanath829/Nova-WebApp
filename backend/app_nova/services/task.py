@@ -117,7 +117,9 @@ def task_get(request):
 #Author-Ananthu
 def weekly_tasks_get(request):
     user = request.user
-    weeks_date_list = get_week_dates(date.today(), 1, 7)
+    count = request.GET.get('count')
+    delta = timedelta(days=int(count))
+    weeks_date_list = get_week_dates(date.today() + delta, 1, 7)
     week_task_qs = UserTask.objects.filter(is_active=True, user=user)
 
     task_list = []
