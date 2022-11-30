@@ -8,4 +8,7 @@ urlpatterns = [
     path('details/get', work.WorkDetailsGetAPI.as_view()),
     path('edit', work.WorkEditAPI.as_view()),
     path('delete/<int:work_id>', work.WorkDeleteAPI.as_view()),
+
+    path('comment/save', work.WorkCommentSaveAPI.as_view()),
+    path('comments/get', work.WorkCommentListGetAPI.as_view()),
 ]

@@ -41,7 +41,7 @@ class WorkDetailsGetAPI(ExceptionHandlerMixin, APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        serializer = WorkDetailsGetSerializer(work_get(request))
+        serializer = WorkDetailsGetSerializer(work_get(request), context={'request': request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
@@ -69,3 +69,29 @@ class WorkDeleteAPI(ExceptionHandlerMixin, APIView):
     def delete(self, request, work_id):
         work_delete(request=request, work_id=work_id)
         return Response(status=status.HTTP_200_OK, data='Work deleted successfully')
+
+
+##Class to save work comment
+#Author-Ananthu
+class WorkCommentSaveAPI(ExceptionHandlerMixin, APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = WorkCommentSaveSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        comment_save(request=request, **serializer.validated_data)
+
+        return Response(status=status.HTTP_200_OK, data='Comment saved successfully')
+
+
+##Class to get comments list
+#Author-Ananthu
+class WorkCommentListGetAPI(ExceptionHandlerMixin, APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = WorkCommentListGetSerializer(comments_get(request), many=True)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)

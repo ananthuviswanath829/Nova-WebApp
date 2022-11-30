@@ -38,6 +38,7 @@ class WorkDetailsGetSerializer(serializers.Serializer):
     user_id = serializers.SerializerMethodField()
     start_date = serializers.SerializerMethodField()
     end_date = serializers.SerializerMethodField()
+    show_pay_btn = serializers.SerializerMethodField()
 
     def get_user_id(self, obj):
         return obj.assigned_to.id
@@ -47,6 +48,10 @@ class WorkDetailsGetSerializer(serializers.Serializer):
     
     def get_end_date(self, obj):
         return obj.end_date.strftime("%Y-%m-%d")
+    
+    def get_show_pay_btn(self, obj):
+        user = self.context['request'].user
+        return True if obj.status == 'Completed' and obj.created_by == user else False
 
 
 ##Serializer for work edit
@@ -59,3 +64,25 @@ class WorkEditSerializer(serializers.Serializer):
     status = serializers.CharField(required=True, allow_blank=False)
     user_id = serializers.IntegerField(required=True)
     description = serializers.CharField(required=True, allow_blank=False)
+
+
+##Serializer for comment save
+#Author-Ananthu
+class WorkCommentSaveSerializer(serializers.Serializer):
+    work_id = serializers.IntegerField(required=True)
+    comment = serializers.CharField(required=True, allow_blank=False)
+
+
+##Serializer to get work comments
+#Author-Ananthu
+class WorkCommentListGetSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    comment = serializers.CharField()
+    full_name = serializers.SerializerMethodField()
+    created_date = serializers.SerializerMethodField()
+
+    def get_full_name(self, obj):
+        return f'{obj.user.first_name} {obj.user.last_name}'
+    
+    def get_created_date(self, obj):
+        return obj.created_date.strftime('%d %b %Y %H:%M')

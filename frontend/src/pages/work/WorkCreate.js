@@ -36,6 +36,7 @@ const WorkCreatePage = () => {
     status: '',
     userId: '',
     description: '',
+    showPayBtn: false,
   };
 
   const {values, handleInputChange} = useForm(initialValues);

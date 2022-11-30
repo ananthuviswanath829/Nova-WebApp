@@ -4,7 +4,7 @@ from django.db.models import Q #Ananthu
 from django.contrib.auth.models import User #Ananthu
 from django.core.exceptions import ValidationError #Ananthu
 
-from app_nova.models import Work #Ananthu
+from app_nova.models import Work, WorkComment #Ananthu
 from app_nova.services import service_log #Ananthu
 
 
@@ -94,3 +94,31 @@ def work_delete(request, work_id: int):
         err = f'Work does not exist, id - {work_id}'
         service_log.log_save('Work Edit', err, user.username, 0)
         raise ValidationError(err)
+
+
+##Function to save work comment
+#Author-Ananthu
+def comment_save(request, work_id: int, comment: str):
+    try:
+        user = request.user
+        work_obj = Work.objects.get(is_active=True, id=work_id)
+
+        comment_obj = WorkComment(
+            work = work_obj,
+            user = user,
+            comment = comment,
+            created_by = user,
+            modified_by = user,
+        )
+        comment_obj.full_clean()
+        comment_obj.save()
+    except Work.DoesNotExist:
+        err = f'Work does not exist, id - {work_id}'
+        service_log.log_save('Work Comment Save', err, user.username, 0)
+        raise ValidationError(err)
+
+
+##Function to get work comments
+#Author-Ananthu
+def comments_get(request):
+    return WorkComment.objects.filter(is_active=True, work__id=request.GET.get('work_id')).order_by('-id')

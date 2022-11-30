@@ -12,5 +12,6 @@ from .friends import Friends #Ananthu
 from .usertask import UserTask #Ananthu
 
 from .work import Work #Ananthu
+from .workcomment import WorkComment #Ananthu
 
 from .log import Log #Ananthu
