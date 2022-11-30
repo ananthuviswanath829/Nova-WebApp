@@ -1,0 +1,144 @@
+import { useContext, useState, useEffect } from "react";
+
+import SearchContext from "../../context/SearchContext";
+import useAxios from "../../utils/useAxios";
+import { useForm } from "../../utils/useForm";
+
+import CssBaseline from '@mui/material/CssBaseline';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Container from '@mui/material/Container';
+import { Typography } from "@mui/material";
+
+import TopBar from "../../component/layout/TopBar";
+import WorkForm from "../../component/work/WorkForm";
+import ErrorModal from "../../component/layout/ErrorModal";
+import SuccessAlert from "../../component/layout/SuccessAlert";
+
+const theme = createTheme();
+
+const WorkEditPage = () => {
+  const api = useAxios();
+
+  const docUrIArr = window.location.href.split('/');
+  const workId = docUrIArr[docUrIArr.length - 1];
+
+  const { searchTerm, setSearchTerm, getSearchResult } = useContext(SearchContext);
+
+  const resObj = {
+    axiosError: false,
+    errMsg: '',
+    errHeading: '',
+    successMsg: '',
+    showAlert: false,
+  };
+
+  const initialValues = {
+    workName: '',
+    startDate: new Date(),
+    endDate: new Date(),
+    status: '',
+    userId: '',
+    description: '',
+  };
+
+  const {values, setValues, handleInputChange} = useForm(initialValues);
+  const [apiRes, setApiRes] = useState(resObj);
+  const [friendsList, setFriendsList] = useState([]);
+
+  useEffect(() => {
+    getAllFriends();
+  }, []);
+
+  const getAllFriends = async () => {
+    try {
+      const response = await api.get('/api/all/friends/get');
+
+      if (response.status === 200) {
+        setFriendsList(response.data);
+        getWorkDetails();
+      }
+    } catch (err) {
+      setApiRes({
+        ...apiRes,
+        axiosError: true,
+        errMsg: JSON.stringify(err.response.data),
+        errHeading: 'Friends Get',
+      });
+    }
+  };
+
+  const getWorkDetails = async () => {
+    try {
+      const response = await api.get('/api/work/details/get', {
+        params: {work_id: workId}
+      });
+
+      if (response.status === 200) {
+        const data = response.data;
+        setValues({
+          ...values,
+          workName: data.name,
+          startDate: new Date(data.start_date),
+          endDate: new Date(data.end_date),
+          status: data.status,
+          userId: data.user_id,
+          description: data.description,
+        });
+      }
+    } catch (err) {
+      setApiRes({
+        ...apiRes,
+        axiosError: true,
+        errMsg: JSON.stringify(err.response.data),
+        errHeading: 'Friends Get',
+      });
+    }
+  };
+
+  const editWork = async () => {
+    try {
+      const response = await api.post('/api/work/edit', {
+        work_id: workId,
+        work_name: values.workName,
+        start_date: values.startDate,
+        end_date: values.endDate,
+        status: values.status,
+        user_id: values.userId,
+        description: values.description,
+      });
+
+      if (response.status === 200) {
+        setApiRes({
+          ...apiRes,
+          showAlert: true,
+          successMsg: response.data,
+        });
+      }
+    } catch (err) {
+      setApiRes({
+        ...apiRes,
+        axiosError: true,
+        errMsg: JSON.stringify(err.response.data),
+        errHeading: 'Work Edit',
+      });
+    }
+  };
+
+  return (
+    <div>
+      <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} getSearchResult={getSearchResult} />
+
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        { apiRes.showAlert && <SuccessAlert apiRes={apiRes} setApiRes={setApiRes} />}
+        <Container maxWidth="lg" style={{ marginTop: '10px'}}>
+          <Typography component="h3" variant="h4" style={{ textAlign: 'center', marginTop: '10px'}}>Work Edit</Typography>
+          <WorkForm friendsList={friendsList} values={values} handleInputChange={handleInputChange} submitForm={editWork} />
+        </Container>
+        <ErrorModal apiRes={apiRes} setApiRes={setApiRes} />
+      </ThemeProvider>
+    </div>
+  );
+};
+
+export default WorkEditPage;

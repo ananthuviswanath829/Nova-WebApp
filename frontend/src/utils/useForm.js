@@ -6,7 +6,7 @@ export const useForm = initialValues => {
 
   const handleInputChange = name => event => {
     let value = '';
-    if(name === 'dob') { value = event } else { value = event.target.value }
+    if(name === 'dob' || name == 'startDate' || name == 'endDate') { value = event } else { value = event.target.value }
     setValues({
       ...values,
       [name]: value,

@@ -108,3 +108,18 @@ class FriendRequesCancelAPI(ExceptionHandlerMixin, APIView):
         friend_request_cancel(request=request, **serializer.validated_data)
 
         return Response(status=status.HTTP_200_OK, data='Friend request accepted successfully')
+
+
+##Class to get friends list
+#Author-Ananthu
+class AllFriendsListGetAPI(ExceptionHandlerMixin, APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        friends_qs = Friends.objects.select_related('user', 'friend').filter(is_active=True, is_accepted=True)
+        request_sent_qs = friends_qs.filter(user=request.user)
+        request_received_qs = friends_qs.filter(friend=request.user)
+        request_sent_serializer = AllFriendsGetSerializer(request_sent_qs, many=True, context={'type': 'request sent'})
+        request_recieved_serializer = AllFriendsGetSerializer(request_received_qs, many=True, context={'type': 'request received'})
+        return Response(status=status.HTTP_200_OK, data=request_sent_serializer.data + request_recieved_serializer.data)

@@ -114,6 +114,10 @@ export default function TopBar(props) {
     navigate('/friend/requests');
   };
 
+  const navigateToWork = () => {
+    navigate('/work/list');
+  };
+
   const navigateToSearch = () => {
     if (props.searchTerm !== '') { 
       navigate('/search/result'); 
@@ -140,6 +144,7 @@ export default function TopBar(props) {
     >
       <MenuItem onClick={navigateToProfile}>Profile</MenuItem>
       <MenuItem onClick={navigateToFriends}>Friends</MenuItem>
+      <MenuItem onClick={navigateToWork}>Work</MenuItem>
       <MenuItem onClick={signOutSession}>Sign out</MenuItem>
     </Menu>
   );

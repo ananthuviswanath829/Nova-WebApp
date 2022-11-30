@@ -10,4 +10,5 @@ urlpatterns = [
     path('friend/requests/get', um.FriendRequestGetAPI.as_view()),
     path('friend/request/accept', um.FriendRequestAcceptAPI.as_view()),
     path('friend/request/cancel', um.FriendRequesCancelAPI.as_view()),
+    path('all/friends/get', um.AllFriendsListGetAPI.as_view()),
 ]

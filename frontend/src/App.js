@@ -16,6 +16,9 @@ import PersonProfilePage from './pages/friend/PersonProfile';
 import FriendsListPage from './pages/friend/FriendsList';
 import FriendRequestListPage from './pages/friend/FriendRequestList';
 import ChatPage from './pages/message/Chat';
+import WorkListPage from './pages/work/WorkList';
+import WorkCreatePage from './pages/work/WorkCreate';
+import WorkEditPage from './pages/work/WorkEdit';
 
 const App = () => {
   return (
@@ -87,7 +90,30 @@ const App = () => {
                                   </SearchProvider>
                                 </AuthProvider>}
                               />
+        
+        <Route path='/work/list' element={
+                                <AuthProvider>
+                                  <SearchProvider>
+                                    <PrivateRoute Component={WorkListPage}/>
+                                  </SearchProvider>
+                                </AuthProvider>}
+                              />
 
+        <Route path='/work/create' element={
+                                        <AuthProvider>
+                                          <SearchProvider>
+                                            <PrivateRoute Component={WorkCreatePage}/>
+                                          </SearchProvider>
+                                        </AuthProvider>}
+                                      />
+
+        <Route path='/work/edit/:id' element={
+                                        <AuthProvider>
+                                          <SearchProvider>
+                                            <PrivateRoute Component={WorkEditPage}/>
+                                          </SearchProvider>
+                                        </AuthProvider>}
+                                      />
         <Route path='/account/verification/:code' element={<AccountVerificationPage />} />
         <Route path='/page-not-found' element={<PageNotFoundPage />} />
       </Routes>

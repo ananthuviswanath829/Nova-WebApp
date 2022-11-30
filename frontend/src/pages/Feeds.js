@@ -2,7 +2,6 @@ import { useContext, useState, useEffect } from "react";
 
 import SearchContext from "../context/SearchContext";
 import useAxios from "../utils/useAxios";
-import AuthContext from "../context/AuthContext";
 
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -21,7 +20,6 @@ const FeedsPage = () => {
   const api = useAxios();
 
   const { searchTerm, setSearchTerm, getSearchResult } = useContext(SearchContext);
-  const { user } = useContext(AuthContext);
 
   const resObj = {
     axiosError: false,
@@ -43,7 +41,7 @@ const FeedsPage = () => {
 
   useEffect(() => {
     tasksListGet();
-  }, [count, user.access ])
+  }, [count])
 
   const [apiRes, setApiRes] = useState(resObj);
   const [taskList, setTaskList] = useState([]);

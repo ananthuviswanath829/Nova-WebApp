@@ -84,7 +84,7 @@ const UserProfileEditPage = () => {
 
   useEffect(() => {
     getAllSkills();
-  }, [])
+  }, []);
 
   const getAllSkills = async () => {
     try {

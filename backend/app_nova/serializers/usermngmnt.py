@@ -104,3 +104,30 @@ class FriendRequestGetSerializer(serializers.Serializer):
 
     def get_status(self, obj):
         return self.context['type']
+
+
+##Serializer for friends list
+#Author-Ananthu
+class AllFriendsGetSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    user_id = serializers.SerializerMethodField()
+    first_name = serializers.SerializerMethodField()
+    last_name = serializers.SerializerMethodField()
+
+    def get_user_id(self, obj):
+        if self.context['type'] == 'request received':
+            return obj.user.id
+        else:
+            return obj.friend.id
+    
+    def get_first_name(self, obj):
+        if self.context['type'] == 'request received':
+            return obj.user.first_name
+        else:
+            return obj.friend.first_name
+    
+    def get_last_name(self, obj):
+        if self.context['type'] == 'request received':
+            return obj.user.last_name
+        else:
+            return obj.friend.last_name
