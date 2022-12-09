@@ -19,6 +19,7 @@ import ChatPage from './pages/message/Chat';
 import WorkListPage from './pages/work/WorkList';
 import WorkCreatePage from './pages/work/WorkCreate';
 import WorkEditPage from './pages/work/WorkEdit';
+import PaymentPage from './pages/payment/Payment';
 
 const App = () => {
   return (
@@ -114,6 +115,15 @@ const App = () => {
                                           </SearchProvider>
                                         </AuthProvider>}
                                       />
+        
+        <Route path='/payment' element={
+                                        <AuthProvider>
+                                          <SearchProvider>
+                                            <PrivateRoute Component={PaymentPage}/>
+                                          </SearchProvider>
+                                        </AuthProvider>}
+                                      />
+
         <Route path='/account/verification/:code' element={<AccountVerificationPage />} />
         <Route path='/page-not-found' element={<PageNotFoundPage />} />
       </Routes>

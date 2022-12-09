@@ -9,12 +9,20 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 
+import { useNavigate } from 'react-router-dom';
+
 const WorkForm = props => {
+  const navigate = useNavigate();
+
   const statusList = ['Assigned', 'In Progress', 'Blocked', 'Completed'];
 
   const submitForm = e => {
     e.preventDefault();
     props.submitForm();
+  };
+
+  const navigateToPayment = () => {
+    navigate('/payment');
   };
 
   return (
@@ -108,7 +116,7 @@ const WorkForm = props => {
 
         <Grid container spacing={2} style={{marginTop: '2px', marginLeft: '-8px'}}>
           <Button variant='contained' type='submit'>Submit</Button>
-          {props.values.showPayBtn && <Button variant='contained' color='success' style={{ marginLeft: '10px'}}>Pay</Button>}
+          {props.values.showPayBtn && <Button variant='contained' color='success' style={{ marginLeft: '10px'}} onClick={navigateToPayment}>Pay</Button>}
         </Grid>
       </Form>
     </div>
