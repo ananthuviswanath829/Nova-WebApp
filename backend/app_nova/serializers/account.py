@@ -31,6 +31,8 @@ class UserProfileEditSerializer(serializers.Serializer):
     per_hour_rate = serializers.CharField(required=True, allow_blank=False)
     availability = serializers.CharField(required=True, allow_blank=False)
     rating = serializers.CharField(required=True, allow_blank=False)
+    node_address = serializers.CharField(required=False, allow_blank=True)
+    private_key = serializers.CharField(required=False, allow_blank=True)
 
 
 ##Serializer for user profile get
@@ -46,6 +48,8 @@ class UserProfileGetSerializer(serializers.Serializer):
     per_hour_rate = serializers.SerializerMethodField()
     availability = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
+    node_address = serializers.SerializerMethodField()
+    private_key = serializers.SerializerMethodField()
 
     def get_dob(self, obj):
         if obj.userprofile_set.get(is_active=True, user=obj).dob is not None:
@@ -72,3 +76,12 @@ class UserProfileGetSerializer(serializers.Serializer):
     def get_rating(self, obj):
         preference_qs = obj.searchpreference_set.filter(is_active=True, user=obj)
         return preference_qs[0].rating if preference_qs.exists() else ''
+    
+    def get_node_address(self, obj):
+        crypto_credentials_qs = obj.cryptocredentials_set.filter(is_active=True, user=obj)
+        return crypto_credentials_qs[0].node_address if crypto_credentials_qs.exists() else ''
+    
+    def get_private_key(self, obj):
+        crypto_credentials_qs = obj.cryptocredentials_set.filter(is_active=True, user=obj)
+        return crypto_credentials_qs[0].private_key if crypto_credentials_qs.exists() else ''
+        

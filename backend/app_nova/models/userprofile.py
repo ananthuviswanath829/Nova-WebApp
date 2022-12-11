@@ -13,6 +13,8 @@ class UserProfile(models.Model):
     per_hour_rate = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     rating = models.DecimalField(default=0, max_digits=2, decimal_places=1)
     availability = models.DurationField(default=timedelta(minutes=0))
+    node_address = models.TextField(null=True, blank=True)
+    private_key = models.TextField(default=0)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now_add=True)

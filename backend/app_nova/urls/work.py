@@ -11,4 +11,7 @@ urlpatterns = [
 
     path('comment/save', work.WorkCommentSaveAPI.as_view()),
     path('comments/get', work.WorkCommentListGetAPI.as_view()),
+
+    path('status/get', work.EtheriumStatusGetAPI.as_view()),
+    path('transaction', work.EtheriumTransactionAPI.as_view()),
 ]

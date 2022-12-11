@@ -86,3 +86,10 @@ class WorkCommentListGetSerializer(serializers.Serializer):
     
     def get_created_date(self, obj):
         return obj.created_date.strftime('%d %b %Y %H:%M')
+
+
+##Serializer for etherium transaction
+#Author-Ananthu
+class EtheriumTransactionSerializer(serializers.Serializer):
+    recipient = serializers.CharField(required=True, allow_blank=False)
+    amount = serializers.FloatField(required=True)

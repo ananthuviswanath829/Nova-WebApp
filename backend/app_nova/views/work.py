@@ -95,3 +95,28 @@ class WorkCommentListGetAPI(ExceptionHandlerMixin, APIView):
     def get(self, request):
         serializer = WorkCommentListGetSerializer(comments_get(request), many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+##Class to get etherium status
+#Author-Ananthu
+class EtheriumStatusGetAPI(ExceptionHandlerMixin, APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response(status=status.HTTP_200_OK, data=etherium_status_get(request))
+    
+
+##Class to transfer etherium
+#Author-Ananthu
+class EtheriumTransactionAPI(ExceptionHandlerMixin, APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = EtheriumTransactionSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        msg = transfer_etherium(request=request, **serializer.validated_data)
+
+        return Response(status=status.HTTP_200_OK, data=msg)

@@ -7,6 +7,7 @@ from PIL import Image as pil_img
 from io import BytesIO #Ananthu
 
 from datetime import datetime #Ananthu
+from uuid import uuid4 #Ananthu
 
 from django.core.exceptions import ValidationError #Ananthu
 from django.contrib.auth.models import User #Ananthu
@@ -14,8 +15,9 @@ from django.core.mail import EmailMessage #Ananthu
 from django.conf import settings #Ananthu
 from django.db import transaction #Ananthu
 
+# from app_nova.views.payment import Blockchain #Ananthu
 from app_nova.services import service_log #Ananthu
-from app_nova.models import UserProfile, EmailVerificationCode, Skill, UserSkill, SearchPreference #Ananthu
+from app_nova.models import UserProfile, EmailVerificationCode, Skill, UserSkill, SearchPreference, CryptoCredentials #Ananthu
 
 
 ##Function to register
@@ -108,7 +110,7 @@ def verify_token(token):
 ##Function to edit user profile
 #Author-Ananthu
 def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob: datetime, profile_pic: str, skills_list: str, 
-                        experience: str, per_hour_rate: str, availability: str, rating: str):
+                        experience: str, per_hour_rate: str, availability: str, rating: str, node_address: str, private_key: str):
     try:
         skills_list = json.loads(skills_list)
         
@@ -116,6 +118,7 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
         userprofile_obj = UserProfile.objects.get(is_active=True, user=user)
         all_skills_qs = Skill.objects.filter(is_active=True)
         search_preference_obj = SearchPreference.objects.get(is_active=True, user=user)
+        crypto_credentials_qs = CryptoCredentials.objects.filter(is_active=True, user=user)
 
         # image = base64.b64decode(str(profile_pic))       
         # fileName = 'test.jpeg'
@@ -162,6 +165,19 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
                     user_skill_obj.modified_by = user
                 user_skill_obj.full_clean()
                 user_skill_obj.save()
+            
+            if not crypto_credentials_qs.exists():
+                crypto_credentials_obj = CryptoCredentials(
+                    user = user,
+                    node_address = node_address,
+                    private_key = private_key,
+                )
+            else:
+                crypto_credentials_obj = crypto_credentials_qs[0]
+                crypto_credentials_obj.node_address = node_address
+                crypto_credentials_obj.private_key = private_key
+            crypto_credentials_obj.full_clean()
+            crypto_credentials_obj.save()
     except UserProfile.DoesNotExist:
         err = f'Skill does not exist - {skill}'
         service_log.log_save('Profile Edit', err, user.username, 0)

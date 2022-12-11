@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 import UserCard from "../../component/user/UserCard";
 import SkillCard from '../../component/user/SkillCard';
 import SearchPreference from '../../component/user/SearchPreference';
+import PaymentCard from '../../component/user/PaymentCard';
 
 import { useForm } from '../../utils/useForm';
 import useAxios from '../../utils/useAxios';
@@ -49,6 +50,8 @@ const UserProfilePage = () => {
   };
 
   const [apiRes, setApiRes] = useState(resObj);
+  const [nodeAddress, setNodeAddress] = useState('');
+  const [balance, setBalance] = useState('');
 
   useEffect(() => {
     getUserProfile();
@@ -59,6 +62,7 @@ const UserProfilePage = () => {
       const response = await api.get('/api/user/profile/get');
 
       if (response.status === 200) {
+        getStatus();
         setValues({
           ...values, 
           firstName: response.data.first_name,
@@ -87,6 +91,24 @@ const UserProfilePage = () => {
     }
   };
 
+  const getStatus = async () => {
+    try {
+      const response = await api.get('/api/etherium/status/get');
+
+      if (response.status === 200) {
+        setNodeAddress(response.data.node_address);
+        setBalance(response.data.balance);
+      }
+    } catch (err) {
+      setApiRes({
+        ...apiRes,
+        axiosError: true,
+        errMsg: JSON.stringify(err.response.data),
+        errHeading: 'Status Get',
+      });
+    }
+  };
+
   return (
     <div>
       <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} getSearchResult={getSearchResult} />
@@ -97,6 +119,7 @@ const UserProfilePage = () => {
         <UserCard data={values} />
         <SkillCard data={values} />
         <SearchPreference data={values} />
+        <PaymentCard nodeAddress={nodeAddress} balance={balance} />
       </Container>
       </ThemeProvider>
       <ErrorModal apiRes={apiRes} setApiRes={setApiRes} />

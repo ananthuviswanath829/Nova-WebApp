@@ -4,27 +4,32 @@ import Container from '@mui/material/Container';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 
-const Send = () => {
+const Send = props => {
+  const submitForm = e => {
+    e.preventDefault();
+    props.sendEtherium();
+  };
+
   return (
     <Container>
       <div style={{textAlign: 'center'}}>
-        <h2>SudoCoin</h2>
-        <h3><b style={{color: '#007bff'}}>Send crypto to anyone.</b> </h3>
+        <h2>ETHERIUM</h2>
+        <h3><b style={{color: '#007bff'}}>Send etherium to anyone.</b> </h3>
       </div>
 
-      <Form>
+      <Form onSubmit={submitForm}>
         <TextField
           id="recipient"
           label="Recipient"
-          // value={props.values.description}
-          // onChange={props.handleInputChange('description')}
+          value={props.values.recipient}
+          onChange={props.handleInputChange('recipient')}
         />
 
         <TextField
           id="amount"
           label="Amount"
-          // value={props.values.description}
-          // onChange={props.handleInputChange('description')}
+          value={props.values.amount}
+          onChange={props.handleInputChange('amount')}
           style={{ width: '50%' }}
         />
 

@@ -38,6 +38,8 @@ const UserProfileEditPage = () => {
     perHourRate: '',
     availability: '',
     rating: '',
+    nodeAddress: '',
+    privateKey: '',
   };
 
   const {values, setValues, handleInputChange} = useForm(initialValues);
@@ -124,6 +126,8 @@ const UserProfileEditPage = () => {
           perHourRate: response.data.per_hour_rate,
           availability: response.data.availability,
           rating: response.data.rating,
+          nodeAddress: response.data.node_address,
+          privateKey: response.data.private_key,
         });
         setExperienceList(response.data.skills_list);
       }
@@ -155,6 +159,8 @@ const UserProfileEditPage = () => {
         per_hour_rate: values.perHourRate,
         availability: values.availability,
         rating: values.rating,
+        node_address: values.nodeAddress,
+        private_key: values.privateKey,
       });
 
       if (response.status === 200) {
@@ -232,6 +238,31 @@ const UserProfileEditPage = () => {
                 onChange={handleInputChange('dob')}
               />
               </LocalizationProvider>
+            </Grid>
+          </Grid>
+
+          <Grid style={{margin: '10px'}}>
+            <Typography component="h2" variant="h5">Etherium Details</Typography>
+
+            <Grid container spacing={2} style={{display: 'flex', marginTop: '5px'}}>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  varient="outlined"
+                  label="Node Address"
+                  name='nodeAddress'
+                  value={values.nodeAddress}
+                  onChange={handleInputChange('nodeAddress')}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  varient="outlined"
+                  label="Private Key"
+                  name='privateKey'
+                  value={values.privateKey}
+                  onChange={handleInputChange('privateKey')}
+                />
+              </Grid>
             </Grid>
           </Grid>
 

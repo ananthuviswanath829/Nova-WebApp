@@ -1,10 +1,13 @@
 from datetime import date, datetime #Ananthu
 
+from web3 import Web3 #Ananthu
+
+from django.conf import settings #Ananthu
 from django.db.models import Q #Ananthu 
 from django.contrib.auth.models import User #Ananthu
 from django.core.exceptions import ValidationError #Ananthu
 
-from app_nova.models import Work, WorkComment #Ananthu
+from app_nova.models import Work, WorkComment, CryptoCredentials #Ananthu
 from app_nova.services import service_log #Ananthu
 
 
@@ -122,3 +125,49 @@ def comment_save(request, work_id: int, comment: str):
 #Author-Ananthu
 def comments_get(request):
     return WorkComment.objects.filter(is_active=True, work__id=request.GET.get('work_id')).order_by('-id')
+
+
+##Function to get etherium status
+#Author-Ananthu
+def etherium_status_get(request):
+    try:
+        user = request.user
+        crypto_credentials_obj = CryptoCredentials.objects.get(is_active=True, user=user)
+        web3 = Web3(Web3.HTTPProvider(settings.ETHERIUM_URL))
+        node_address = crypto_credentials_obj.node_address
+        balance = web3.eth.getBalance(node_address)
+        balance = web3.fromWei(balance, 'ether')
+        return {'node_address': node_address, 'balance': balance}
+    except CryptoCredentials.DoesNotExist:
+        err = f'Crypto Credentials does not exist, user id - {user.id}'
+        service_log.log_save('Etherium status get', err, user.username, 0)
+        raise ValidationError(err)
+
+
+##Function to transfer etherium
+#Author-Ananthu
+def transfer_etherium(request, recipient: str, amount: float):
+    try:
+        user = request.user
+        crypto_credentials_obj = CryptoCredentials.objects.get(is_active=True, user=user)
+        node_address = crypto_credentials_obj.node_address
+        private_key = crypto_credentials_obj.private_key
+
+        web3 = Web3(Web3.HTTPProvider(settings.ETHERIUM_URL))
+        nonce = web3.eth.getTransactionCount(node_address)
+
+        tx = {
+            'nonce': nonce,
+            'to': recipient,
+            'value': web3.toWei(amount, 'ether'),
+            'gas': 2000000,
+            'gasPrice': web3.toWei('50', 'gwei'),
+        }
+
+        signed_tx = web3.eth.account.signTransaction(tx, private_key)
+        tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
+        return f'Payment success, Transaction id - {web3.toHex(tx_hash)}'
+    except CryptoCredentials.DoesNotExist:
+        err = f'Crypto Credentials does not exist, user id - {user.id}'
+        service_log.log_save('Etherium Transfer', err, user.username, 0)
+        raise ValidationError(err)
