@@ -56,7 +56,7 @@ const PaymentPage = () => {
         ...apiRes,
         axiosError: true,
         errMsg: JSON.stringify(err.response.data),
-        errHeading: 'Transactions Get',
+        errHeading: 'Status Get',
       });
     }
   };
@@ -81,7 +81,7 @@ const PaymentPage = () => {
         ...apiRes,
         axiosError: true,
         errMsg: JSON.stringify(err.response.data),
-        errHeading: 'Profile Edit',
+        errHeading: 'Etherium Transfer',
       });
     }
   };

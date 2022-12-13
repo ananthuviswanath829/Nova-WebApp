@@ -154,6 +154,14 @@ def transfer_etherium(request, recipient: str, amount: float):
         private_key = crypto_credentials_obj.private_key
 
         web3 = Web3(Web3.HTTPProvider(settings.ETHERIUM_URL))
+        balance = web3.eth.getBalance(node_address)
+        balance = web3.fromWei(balance, 'ether')
+
+        if amount > balance:
+            err = "You don't have sufficient balance"
+            service_log.log_save('Etherium Transfer', err, user.username, 0)
+            raise ValidationError(err)
+
         nonce = web3.eth.getTransactionCount(node_address)
 
         tx = {
