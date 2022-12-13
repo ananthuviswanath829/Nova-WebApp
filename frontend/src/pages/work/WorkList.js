@@ -140,6 +140,7 @@ const WorkListPage = () => {
                 <TableRow>
                   <StyledTableCell align="center">Name</StyledTableCell>
                   <StyledTableCell align="center">Description</StyledTableCell>
+                  <StyledTableCell align="center">Status</StyledTableCell>
                   <StyledTableCell align="center">Assigned To</StyledTableCell>
                   <StyledTableCell align="center">Created By</StyledTableCell>
                   <StyledTableCell align="center">Action</StyledTableCell>
@@ -152,6 +153,7 @@ const WorkListPage = () => {
                       {row.name}
                     </StyledTableCell>
                     <StyledTableCell align="center" onClick={navigateToEdit(row)}>{row.description}</StyledTableCell>
+                    <StyledTableCell align="center" onClick={navigateToEdit(row)}>{row.status}</StyledTableCell>
                     <StyledTableCell align="center" onClick={navigateToEdit(row)}>{row.assigned_to}</StyledTableCell>
                     <StyledTableCell align="center" onClick={navigateToEdit(row)}>{row.created_by}</StyledTableCell>
                     <StyledTableCell align="center"><DeleteIcon onClick={handleDelete(row)} /></StyledTableCell>

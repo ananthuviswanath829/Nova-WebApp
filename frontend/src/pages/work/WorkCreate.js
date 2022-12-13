@@ -37,6 +37,8 @@ const WorkCreatePage = () => {
     userId: '',
     description: '',
     showPayBtn: false,
+    paymentMethod: '',
+    amount: '',
   };
 
   const {values, handleInputChange} = useForm(initialValues);
@@ -73,6 +75,8 @@ const WorkCreatePage = () => {
         status: values.status,
         user_id: values.userId,
         description: values.description,
+        payment_method: values.paymentMethod,
+        amount: values.amount,
       });
 
       if (response.status === 200) {

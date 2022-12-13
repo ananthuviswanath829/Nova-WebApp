@@ -6,6 +6,7 @@ from rest_framework import serializers #Ananthu
 class WorkListGetSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
+    status = serializers.CharField()
     description = serializers.CharField()
     assigned_to = serializers.SerializerMethodField()
     created_by = serializers.SerializerMethodField()
@@ -26,6 +27,8 @@ class WorkCreateSerializer(serializers.Serializer):
     status = serializers.CharField(required=True, allow_blank=False)
     user_id = serializers.IntegerField(required=True)
     description = serializers.CharField(required=True, allow_blank=False)
+    payment_method = serializers.CharField(required=True, allow_blank=False)
+    amount = serializers.CharField(required=True, allow_blank=False)
 
 
 ##Serializer for work list
@@ -39,6 +42,8 @@ class WorkDetailsGetSerializer(serializers.Serializer):
     start_date = serializers.SerializerMethodField()
     end_date = serializers.SerializerMethodField()
     show_pay_btn = serializers.SerializerMethodField()
+    payment_method = serializers.SerializerMethodField()
+    amount = serializers.SerializerMethodField()
 
     def get_user_id(self, obj):
         return obj.assigned_to.id
@@ -52,6 +57,12 @@ class WorkDetailsGetSerializer(serializers.Serializer):
     def get_show_pay_btn(self, obj):
         user = self.context['request'].user
         return True if obj.status == 'Completed' and obj.created_by == user else False
+    
+    def get_payment_method(self, obj):
+        return obj.payment_method.name
+    
+    def get_amount(self, obj):
+        return str(obj.amount)
 
 
 ##Serializer for work edit
@@ -64,6 +75,8 @@ class WorkEditSerializer(serializers.Serializer):
     status = serializers.CharField(required=True, allow_blank=False)
     user_id = serializers.IntegerField(required=True)
     description = serializers.CharField(required=True, allow_blank=False)
+    payment_method = serializers.CharField(required=True, allow_blank=False)
+    amount = serializers.CharField(required=True, allow_blank=False)
 
 
 ##Serializer for comment save

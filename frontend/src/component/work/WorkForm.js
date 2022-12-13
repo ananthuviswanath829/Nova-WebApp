@@ -14,7 +14,8 @@ import { useNavigate } from 'react-router-dom';
 const WorkForm = props => {
   const navigate = useNavigate();
 
-  const statusList = ['Assigned', 'In Progress', 'Blocked', 'Completed'];
+  const statusList = ['Pending', 'Assigned', 'In Progress', 'Blocked', 'Completed'];
+  const paymentMethodList = ['Etherium', 'SudoCoin'];
 
   const submitForm = e => {
     e.preventDefault();
@@ -100,6 +101,37 @@ const WorkForm = props => {
                 ))
               }
             </Select>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={2} style={{display : 'flex', marginTop: '2px',  marginLeft: '-23px'}}>
+          <Grid item xs={12} md={6}>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Payment Method"
+              value={props.values.paymentMethod}
+              onChange={props.handleInputChange('paymentMethod')}
+              style={{width: '100%'}}
+              defaultValue=""
+            >
+              {
+                paymentMethodList.map((data, index) => (
+                  <MenuItem key={index} value={data}>{data}</MenuItem>
+                ))
+              }
+            </Select>
+          </Grid>
+
+          <Grid item xs={12} md={6} style={{marginTop: '-8px', marginLeft: '-8px'}}>
+            <TextField
+              varient="outlined"
+              label="Amount"
+              name='amount'
+              required
+              value={props.values.amount}
+              onChange={props.handleInputChange('amount')}
+            />
           </Grid>
         </Grid>
 

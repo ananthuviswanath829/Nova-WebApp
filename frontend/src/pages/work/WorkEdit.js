@@ -42,6 +42,8 @@ const WorkEditPage = () => {
     userId: '',
     description: '',
     showPayBtn: false,
+    paymentMethod: '',
+    amount: '',
   };
 
   const {values, setValues, handleInputChange} = useForm(initialValues);
@@ -88,6 +90,8 @@ const WorkEditPage = () => {
           userId: data.user_id,
           description: data.description,
           showPayBtn: data.show_pay_btn,
+          paymentMethod: data.payment_method,
+          amount: data.amount,
         });
       }
     } catch (err) {
@@ -110,6 +114,8 @@ const WorkEditPage = () => {
         status: values.status,
         user_id: values.userId,
         description: values.description,
+        payment_method: values.paymentMethod,
+        amount: values.amount,
       });
 
       if (response.status === 200) {

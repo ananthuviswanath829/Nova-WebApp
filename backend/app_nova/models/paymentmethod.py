@@ -1,19 +1,11 @@
 from django.db import models #Ananthu
 from django.contrib.auth.models import User #Ananthu
-from app_nova.models import PaymentMethod #Ananthu
 
 
-##Table for saving Work.
+##Table to store payment methods
 #Author-Ananthu
-class Work(models.Model):
-    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE)
-    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
+class PaymentMethod(models.Model):
     name = models.TextField()
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    status = models.TextField()
-    description = models.TextField()
-    amount = models.DecimalField(max_digits=10, decimal_places=4)
     is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
