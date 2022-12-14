@@ -42,7 +42,11 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem('authTokens', JSON.stringify(data));
-      navigate('/');
+      if (jwt_decode(data.access).is_superuser) {
+        navigate('/admin/home');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       setApiRes({
         ...apiRes,

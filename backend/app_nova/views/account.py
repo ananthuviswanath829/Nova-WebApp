@@ -3,10 +3,28 @@ from rest_framework.response import Response #Ananthu
 from rest_framework import status #Ananthu
 from common.mixins import ExceptionHandlerMixin #Ananthu
 from rest_framework.permissions import IsAuthenticated #Ananthu
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer #Ananthu
+from rest_framework_simplejwt.views import TokenObtainPairView #Ananthu
 
 from app_nova.serializers.account import * #Ananthu
 from app_nova.services.account import * #Ananthu
 from app_nova.models import Skill #Ananthu
+
+
+##Serializer to include superuser status to access token
+#Author-Ananthu
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['is_superuser'] = user.is_superuser
+        return token
+
+
+##Class to include superuser status to access token
+#Author-Ananthu
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 
 ##Class to register user
