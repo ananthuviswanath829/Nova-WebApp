@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { SearchProvider } from './context/SearchContext';
 import PrivateRoute from './utils/PrivateRoute';
+import AdminRoute from './utils/AdminRoute';
 
 import SignInPage from './pages/authentication/SignIn';
 import SignUpPage from './pages/authentication/SignUp';
@@ -20,6 +21,7 @@ import WorkListPage from './pages/work/WorkList';
 import WorkCreatePage from './pages/work/WorkCreate';
 import WorkEditPage from './pages/work/WorkEdit';
 import PaymentPage from './pages/payment/Payment';
+import UserListPage from './pages/admin/UserList';
 
 const App = () => {
   return (
@@ -121,6 +123,12 @@ const App = () => {
                                           <SearchProvider>
                                             <PrivateRoute Component={PaymentPage}/>
                                           </SearchProvider>
+                                        </AuthProvider>}
+                                      />
+
+        <Route path='/admin/home' element={
+                                        <AuthProvider>
+                                          <AdminRoute Component={UserListPage}/>
                                         </AuthProvider>}
                                       />
 
