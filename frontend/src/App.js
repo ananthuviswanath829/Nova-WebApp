@@ -126,7 +126,7 @@ const App = () => {
                                         </AuthProvider>}
                                       />
 
-        <Route path='/admin/home' element={
+        <Route path='/admin/users' element={
                                         <AuthProvider>
                                           <AdminRoute Component={UserListPage}/>
                                         </AuthProvider>}

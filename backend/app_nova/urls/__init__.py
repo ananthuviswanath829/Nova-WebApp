@@ -7,5 +7,5 @@ urlpatterns = [
     path('work/', include('app_nova.urls.work')),
     path('etherium/', include('app_nova.urls.work')),
     path('', include('app_nova.urls.usermngmnt')),
-    # path('', include('app_nova.urls.payment')),
+    path('admin/', include('app_nova.urls.admin')),
 ]
