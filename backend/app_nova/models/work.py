@@ -14,6 +14,7 @@ class Work(models.Model):
     status = models.TextField()
     description = models.TextField()
     amount = models.DecimalField(max_digits=10, decimal_places=4)
+    rating = models.DecimalField(max_digits=2, decimal_places=1, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
