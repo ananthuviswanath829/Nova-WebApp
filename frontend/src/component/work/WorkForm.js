@@ -160,7 +160,6 @@ const WorkForm = props => {
 
         <Grid container spacing={2} style={{marginTop: '2px', marginLeft: '-8px'}}>
           <Button variant='contained' type='submit'>Submit</Button>
-          {props.values.showPayBtn && <Button variant='contained' color='success' style={{ marginLeft: '10px'}} onClick={navigateToPayment}>Pay</Button>}
         </Grid>
       </Form>
     </div>

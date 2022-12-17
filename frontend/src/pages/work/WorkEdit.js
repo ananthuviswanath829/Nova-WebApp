@@ -15,6 +15,7 @@ import ErrorModal from "../../component/layout/ErrorModal";
 import SuccessAlert from "../../component/layout/SuccessAlert";
 import CommentForm from "../../component/work/CommentForm";
 import CommentListItem from "../../component/work/CommentListItem";
+import RatingModal from "../../component/work/RatingModal";
 
 const theme = createTheme();
 
@@ -42,9 +43,9 @@ const WorkEditPage = () => {
     assignedTo: '',
     userId: '',
     description: '',
-    showPayBtn: false,
     paymentMethod: '',
     amount: '',
+    rating: 0,
   };
 
   const {values, setValues, handleInputChange} = useForm(initialValues);
@@ -87,6 +88,16 @@ const WorkEditPage = () => {
     }
   };
 
+  const [showRatingModal, setShowRatingModal] = useState(false);
+
+  const submitWork = () => {
+    if (values.status === 'Completed') {
+      setShowRatingModal(true);
+    } else {
+      editWork();
+    }
+  };
+
   const editWork = async () => {
     try {
       const response = await api.post('/api/work/edit', {
@@ -99,9 +110,11 @@ const WorkEditPage = () => {
         description: values.description,
         payment_method: values.paymentMethod,
         amount: values.amount,
+        rating: values.rating,
       });
 
       if (response.status === 200) {
+        setShowRatingModal(false);
         getWorkDetails();
         setApiRes({
           ...apiRes,
@@ -179,7 +192,7 @@ const WorkEditPage = () => {
           <WorkForm 
             values={values} 
             handleInputChange={handleInputChange} 
-            submitForm={editWork}
+            submitForm={submitWork}
             mode={'edit'}
           />
 
@@ -191,6 +204,13 @@ const WorkEditPage = () => {
           }
         </Container>
         <ErrorModal apiRes={apiRes} setApiRes={setApiRes} />
+        <RatingModal 
+          showRatingModal={showRatingModal} 
+          setShowRatingModal={setShowRatingModal} 
+          values={values} 
+          setValues={setValues} 
+          submitForm={editWork}
+        />
       </ThemeProvider>
     </div>
   );

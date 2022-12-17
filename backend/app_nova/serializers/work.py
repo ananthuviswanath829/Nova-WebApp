@@ -42,7 +42,6 @@ class WorkDetailsGetSerializer(serializers.Serializer):
     assigned_to = serializers.SerializerMethodField()
     start_date = serializers.SerializerMethodField()
     end_date = serializers.SerializerMethodField()
-    show_pay_btn = serializers.SerializerMethodField()
     payment_method = serializers.SerializerMethodField()
     amount = serializers.SerializerMethodField()
 
@@ -57,10 +56,6 @@ class WorkDetailsGetSerializer(serializers.Serializer):
     
     def get_end_date(self, obj):
         return obj.end_date.strftime("%Y-%m-%d")
-    
-    def get_show_pay_btn(self, obj):
-        user = self.context['request'].user
-        return True if obj.status == 'Completed' and obj.created_by == user else False
     
     def get_payment_method(self, obj):
         return obj.payment_method.name
@@ -81,6 +76,7 @@ class WorkEditSerializer(serializers.Serializer):
     description = serializers.CharField(required=True, allow_blank=False)
     payment_method = serializers.CharField(required=True, allow_blank=False)
     amount = serializers.DecimalField(max_digits=10, decimal_places=4, required=True)
+    rating = serializers.DecimalField(max_digits=2, decimal_places=1, required=True)
 
 
 ##Serializer for comment save

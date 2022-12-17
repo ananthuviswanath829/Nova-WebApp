@@ -1,4 +1,5 @@
 from datetime import date, datetime #Ananthu
+from decimal import Decimal #Ananthu
 
 from web3 import Web3 #Ananthu
 
@@ -67,48 +68,58 @@ def work_get(request):
 ##Function to edit work
 #Author-Ananthu
 def work_edit(request, work_id: int, work_name: str, start_date: date, end_date: date, status: str, 
-                user_id: int, description: str, payment_method: str, amount: str):
+                user_id: int, description: str, payment_method: str, amount: Decimal, rating: Decimal):
     try:
         user = request.user
         assigned_to = User.objects.get(is_active=True, id=user_id)
         payment_method_obj = PaymentMethod.objects.get(is_active=True, name=payment_method)
         work_obj = Work.objects.get(is_active=True, id=work_id)
+        admin_obj = User.objects.get(is_active=True, username=settings.EMAIL_HOST_USER, is_superuser=True)
         msg = 'Work edited successfully'
 
         with transaction.atomic():
             if status == 'Assigned':
                 if user.id != work_obj.created_by.id:
-                    err = f'You dont have no permission to update status to assigned'
+                    err = 'You dont have no permission to update status to assigned'
                     service_log.log_save('Work Edit', err, user.username, 0)
                     raise ValidationError(err)
 
-                admin_obj = User.objects.get(is_active=True, username=settings.EMAIL_HOST_USER, is_superuser=True)
                 if payment_method == 'Etherium':
                     balance, node_address, private_key = etherium_details_get(work_obj.created_by)
                     if amount >= balance:
-                        err = f'You dont have suffiecient balance'
+                        err = 'You dont have suffiecient balance'
                         service_log.log_save('Work Edit', err, user.username, 0)
                         raise ValidationError(err)
                     
                     recipient = CryptoCredentials.objects.get(user=admin_obj)
                     txn_id = send_etherium(node_address, private_key, recipient.node_address, amount)
                 
+                work_payment_create(work_obj, txn_id, payment_method_obj, work_obj.created_by, admin_obj, amount, 'Paid to admin', user)
                 msg = f'Payment success, Transaction id - {txn_id}'
 
-                work_payment_obj = WorkPayment(
-                    work = work_obj,
-                    transaction_id = txn_id,
-                    payment_method = payment_method_obj,
-                    paid_from = work_obj.created_by,
-                    paid_to = admin_obj,
-                    amount = amount,
-                    status = 'Paid to admin',
-                    created_by = user,
-                    modified_by = user,
-                )
-                work_payment_obj.full_clean()
-                work_payment_obj.save()
+            if status == 'Completed':
+                if user.id != work_obj.created_by.id:
+                    err = 'You dont have no permission to update status to completed'
+                    service_log.log_save('Work Edit', err, user.username, 0)
+                    raise ValidationError(err)
+
+                work_obj.rating = rating
+                msg = 'Work edited successfully. Admin will manually process the payment.'
                 
+                if rating >= 3:
+                    if payment_method == 'Etherium':
+                        balance, node_address, private_key = etherium_details_get(admin_obj)
+                        if amount >= balance:
+                            err = 'Admin doesnt have suffiecient balance. Please contact our support team'
+                            service_log.log_save('Work Edit', err, admin_obj.username, 0)
+                            raise ValidationError(err)
+                        
+                        recipient = CryptoCredentials.objects.get(user=work_obj.assigned_to)
+                        txn_id = send_etherium(node_address, private_key, recipient.node_address, work_obj.amount)
+
+                    work_payment_create(work_obj, txn_id, payment_method_obj, admin_obj, work_obj.assigned_to, amount, 'Paid to user', user)
+                    msg = f'Payment success, Transaction id - {txn_id}'
+
             work_obj.assigned_to = assigned_to
             work_obj.payment_method = payment_method_obj
             work_obj.name = work_name
@@ -260,3 +271,21 @@ def send_etherium(node_address, private_key, recipient, amount):
     signed_tx = web3.eth.account.signTransaction(tx, private_key)
     tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
     return web3.toHex(tx_hash)
+
+
+##Function to create work payment
+#Author-Ananthu
+def work_payment_create(work_obj, txn_id, payment_method_obj, paid_from, paid_to, amount, status, user):
+    work_payment_obj = WorkPayment(
+        work = work_obj,
+        transaction_id = txn_id,
+        payment_method = payment_method_obj,
+        paid_from = paid_from,
+        paid_to = paid_to,
+        amount = amount,
+        status = status,
+        created_by = user,
+        modified_by = user,
+    )
+    work_payment_obj.full_clean()
+    work_payment_obj.save()

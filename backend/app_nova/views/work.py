@@ -41,7 +41,7 @@ class WorkDetailsGetAPI(ExceptionHandlerMixin, APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        serializer = WorkDetailsGetSerializer(work_get(request), context={'request': request})
+        serializer = WorkDetailsGetSerializer(work_get(request))
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 

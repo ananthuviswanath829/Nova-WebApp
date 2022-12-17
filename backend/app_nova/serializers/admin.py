@@ -23,18 +23,18 @@ class TransactionListGetSerializer(serializers.Serializer):
     status = serializers.CharField()
     amount = serializers.CharField()
     work_name = serializers.SerializerMethodField()
-    created_by = serializers.SerializerMethodField()
-    assigned_to = serializers.SerializerMethodField()
+    paid_from = serializers.SerializerMethodField()
+    paid_to = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
 
     def get_work_name(self, obj):
         return obj.work.name
     
-    def get_created_by(self, obj):
-        return f'{obj.work.created_by.first_name} {obj.work.created_by.last_name}'
+    def get_paid_from(self, obj):
+        return f'{obj.paid_from.first_name} {obj.paid_from.last_name}'
     
-    def get_assigned_to(self, obj):
-        return f'{obj.work.assigned_to.first_name} {obj.work.assigned_to.last_name}'
+    def get_paid_to(self, obj):
+        return f'{obj.paid_to.first_name} {obj.paid_to.last_name}'
     
     def get_rating(self, obj):
         return '' if obj.work.rating is None else str(obj.work.rating)

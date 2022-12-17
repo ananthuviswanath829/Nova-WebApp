@@ -134,12 +134,11 @@ const TransactionsPage = () => {
                   <StyledTableCell align="center">SI No</StyledTableCell>
                   <StyledTableCell align="center">Transaction Id</StyledTableCell>
                   <StyledTableCell align="center">Work Name</StyledTableCell>
-                  <StyledTableCell align="center">Created By</StyledTableCell>
-                  <StyledTableCell align="center">Assigned To</StyledTableCell>
+                  <StyledTableCell align="center">Paid From</StyledTableCell>
+                  <StyledTableCell align="center">Paid To</StyledTableCell>
                   <StyledTableCell align="center">Amount</StyledTableCell>
                   <StyledTableCell align="center">Status</StyledTableCell>
                   <StyledTableCell align="center">Rating</StyledTableCell>
-                  <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody style={{cursor: 'pointer'}}>
@@ -148,13 +147,11 @@ const TransactionsPage = () => {
                     <StyledTableCell align="center">{index + 1}</StyledTableCell>
                     <StyledTableCell align="center">{row.transaction_id}</StyledTableCell>
                     <StyledTableCell align="center">{row.work_name}</StyledTableCell>
-                    <StyledTableCell align="center">{row.created_by}</StyledTableCell>
-                    <StyledTableCell align="center">{row.assigned_to}</StyledTableCell>
+                    <StyledTableCell align="center">{row.paid_from}</StyledTableCell>
+                    <StyledTableCell align="center">{row.paid_to}</StyledTableCell>
                     <StyledTableCell align="center">{row.amount}</StyledTableCell>
                     <StyledTableCell align="center">{row.status}</StyledTableCell>
                     <StyledTableCell align="center">{row.rating}</StyledTableCell>
-                    <StyledTableCell align="center">{<Button variant='outlined'>Pay</Button>}</StyledTableCell>
-                    {/* <StyledTableCell align="center"><Switch onChange={handleDelete(row.id)} checked={row.is_active} /></StyledTableCell> */}
                   </StyledTableRow>
                 ))}
               </TableBody>
