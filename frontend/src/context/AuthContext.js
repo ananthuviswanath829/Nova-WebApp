@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
       setUser(jwt_decode(data.access));
       localStorage.setItem('authTokens', JSON.stringify(data));
       if (jwt_decode(data.access).is_superuser) {
-        navigate('/admin/home');
+        navigate('/admin/transactions');
       } else {
         navigate('/');
       }

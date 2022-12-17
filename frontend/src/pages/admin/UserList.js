@@ -16,7 +16,7 @@ import Paper from '@mui/material/Paper';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 
-import MainNavigation from "../../component/admin/MainNavigation";
+import AdminSideNavigation from "../../component/layout/AdminSideNavigation";
 import NoData from "../../component/layout/NoData";
 
 const theme = createTheme();
@@ -53,7 +53,6 @@ const UserListPage = () => {
 
   const [apiRes, setApiRes] = useState(resObj);
   const [userList, setUserList] = useState([]);
-  // const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     getUsersList();
@@ -111,7 +110,7 @@ const UserListPage = () => {
 
   return (
     <div>
-      <MainNavigation />
+      <AdminSideNavigation />
 
       <ThemeProvider theme={theme}>
         <CssBaseline />
