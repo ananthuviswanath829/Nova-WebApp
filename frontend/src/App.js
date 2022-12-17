@@ -22,6 +22,7 @@ import WorkCreatePage from './pages/work/WorkCreate';
 import WorkEditPage from './pages/work/WorkEdit';
 import PaymentPage from './pages/payment/Payment';
 import UserListPage from './pages/admin/UserList';
+import TransactionsPage from './pages/admin/Transactions';
 
 const App = () => {
   return (
@@ -129,6 +130,12 @@ const App = () => {
         <Route path='/admin/users' element={
                                         <AuthProvider>
                                           <AdminRoute Component={UserListPage}/>
+                                        </AuthProvider>}
+                                      />
+
+        <Route path='/admin/transactions' element={
+                                        <AuthProvider>
+                                          <AdminRoute Component={TransactionsPage}/>
                                         </AuthProvider>}
                                       />
 

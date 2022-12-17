@@ -55,9 +55,9 @@ class WorkEditAPI(ExceptionHandlerMixin, APIView):
         serializer = WorkEditSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        work_edit(request=request, **serializer.validated_data)
+        msg = work_edit(request=request, **serializer.validated_data)
 
-        return Response(status=status.HTTP_200_OK, data='Work edited successfully')
+        return Response(status=status.HTTP_200_OK, data=msg)
 
 
 ##Class to delete work

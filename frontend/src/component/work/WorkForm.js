@@ -68,21 +68,33 @@ const WorkForm = props => {
 
         <Grid container spacing={2} style={{display : 'flex', marginTop: '2px',  marginLeft: '-23px'}}>
           <Grid item xs={12} md={6}>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Friends"
-              value={props.values.userId}
-              onChange={props.handleInputChange('userId')}
-              style={{width: '100%'}}
-              defaultValue=""
-            >
-              {
-                props.friendsList.map((data, index) => (
-                  <MenuItem key={index} value={data.user_id}>{`${data.first_name} ${data.last_name}`}</MenuItem>
-                ))
-              }
-            </Select>
+            { props.mode === 'create' &&
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Friends"
+                value={props.values.userId}
+                onChange={props.handleInputChange('userId')}
+                style={{width: '100%'}}
+                defaultValue=""
+              >
+                {
+                  props.friendsList.map((data, index) => (
+                    <MenuItem key={index} value={data.user_id}>{`${data.first_name} ${data.last_name}`}</MenuItem>
+                  ))
+                }
+              </Select>
+            }
+            { props.mode === 'edit' &&
+              <TextField
+                varient="outlined"
+                label="Assigned To"
+                name='workName'
+                value={props.values.assignedTo}
+                style={{marginTop: '1px', marginLeft: '-2px'}}
+                disabled
+              />
+            }
           </Grid>
 
           <Grid item xs={12} md={6}>

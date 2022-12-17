@@ -16,5 +16,6 @@ from .paymentmethod import PaymentMethod #Ananthu
 
 from .work import Work #Ananthu
 from .workcomment import WorkComment #Ananthu
+from .workpayment import WorkPayment #Ananthu
 
 from .log import Log #Ananthu

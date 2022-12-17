@@ -105,7 +105,13 @@ const WorkCreatePage = () => {
         { apiRes.showAlert && <SuccessAlert apiRes={apiRes} setApiRes={setApiRes} />}
         <Container maxWidth="lg" style={{ marginTop: '10px'}}>
           <Typography component="h3" variant="h4" style={{ textAlign: 'center', marginTop: '10px'}}>Work Create</Typography>
-          <WorkForm friendsList={friendsList} values={values} handleInputChange={handleInputChange} submitForm={createWork} />
+          <WorkForm 
+            friendsList={friendsList} 
+            values={values} 
+            handleInputChange={handleInputChange} 
+            submitForm={createWork} 
+            mode={'create'}
+          />
         </Container>
         <ErrorModal apiRes={apiRes} setApiRes={setApiRes} />
       </ThemeProvider>

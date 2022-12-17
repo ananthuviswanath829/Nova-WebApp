@@ -39,6 +39,7 @@ const WorkEditPage = () => {
     startDate: new Date(),
     endDate: new Date(),
     status: '',
+    assignedTo: '',
     userId: '',
     description: '',
     showPayBtn: false,
@@ -48,30 +49,10 @@ const WorkEditPage = () => {
 
   const {values, setValues, handleInputChange} = useForm(initialValues);
   const [apiRes, setApiRes] = useState(resObj);
-  const [friendsList, setFriendsList] = useState([]);
 
   useEffect(() => {
-    getAllFriends();
-    getAllComments();
+    getWorkDetails();
   }, []);
-
-  const getAllFriends = async () => {
-    try {
-      const response = await api.get('/api/all/friends/get');
-
-      if (response.status === 200) {
-        setFriendsList(response.data);
-        getWorkDetails();
-      }
-    } catch (err) {
-      setApiRes({
-        ...apiRes,
-        axiosError: true,
-        errMsg: JSON.stringify(err.response.data),
-        errHeading: 'Friends Get',
-      });
-    }
-  };
 
   const getWorkDetails = async () => {
     try {
@@ -80,6 +61,7 @@ const WorkEditPage = () => {
       });
 
       if (response.status === 200) {
+        getAllComments();
         const data = response.data;
         setValues({
           ...values,
@@ -88,6 +70,7 @@ const WorkEditPage = () => {
           endDate: new Date(data.end_date),
           status: data.status,
           userId: data.user_id,
+          assignedTo: data.assigned_to,
           description: data.description,
           showPayBtn: data.show_pay_btn,
           paymentMethod: data.payment_method,
@@ -108,11 +91,11 @@ const WorkEditPage = () => {
     try {
       const response = await api.post('/api/work/edit', {
         work_id: workId,
+        user_id: values.userId,
         work_name: values.workName,
         start_date: values.startDate,
         end_date: values.endDate,
         status: values.status,
-        user_id: values.userId,
         description: values.description,
         payment_method: values.paymentMethod,
         amount: values.amount,
@@ -193,7 +176,12 @@ const WorkEditPage = () => {
         { apiRes.showAlert && <SuccessAlert apiRes={apiRes} setApiRes={setApiRes} />}
         <Container maxWidth="lg" style={{ marginTop: '10px'}}>
           <Typography component="h3" variant="h4" style={{ textAlign: 'center', marginTop: '10px'}}>Work Edit</Typography>
-          <WorkForm friendsList={friendsList} values={values} handleInputChange={handleInputChange} submitForm={editWork} />
+          <WorkForm 
+            values={values} 
+            handleInputChange={handleInputChange} 
+            submitForm={editWork}
+            mode={'edit'}
+          />
 
           <CommentForm comment={comment} setComment={setComment} onSubmit={commentSave} />
           {

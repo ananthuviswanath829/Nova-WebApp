@@ -39,6 +39,7 @@ class WorkDetailsGetSerializer(serializers.Serializer):
     status = serializers.CharField()
     description = serializers.CharField()
     user_id = serializers.SerializerMethodField()
+    assigned_to = serializers.SerializerMethodField()
     start_date = serializers.SerializerMethodField()
     end_date = serializers.SerializerMethodField()
     show_pay_btn = serializers.SerializerMethodField()
@@ -47,6 +48,9 @@ class WorkDetailsGetSerializer(serializers.Serializer):
 
     def get_user_id(self, obj):
         return obj.assigned_to.id
+
+    def get_assigned_to(self, obj):
+        return f'{obj.assigned_to.first_name} {obj.assigned_to.last_name}'
     
     def get_start_date(self, obj):
         return obj.start_date.strftime("%Y-%m-%d")
@@ -76,7 +80,7 @@ class WorkEditSerializer(serializers.Serializer):
     user_id = serializers.IntegerField(required=True)
     description = serializers.CharField(required=True, allow_blank=False)
     payment_method = serializers.CharField(required=True, allow_blank=False)
-    amount = serializers.CharField(required=True, allow_blank=False)
+    amount = serializers.DecimalField(max_digits=10, decimal_places=4, required=True)
 
 
 ##Serializer for comment save
