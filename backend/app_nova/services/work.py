@@ -1,15 +1,13 @@
 from datetime import date, datetime #Ananthu
 from decimal import Decimal #Ananthu
 
-from web3 import Web3 #Ananthu
-
 from django.conf import settings #Ananthu
 from django.db.models import Q #Ananthu 
 from django.contrib.auth.models import User #Ananthu
 from django.core.exceptions import ValidationError #Ananthu
 from django.db import transaction #Ananthu
 
-from app_nova.models import Work, WorkComment, CryptoCredentials, PaymentMethod, WorkPayment #Ananthu
+from app_nova.models import Work, WorkComment, CryptoCredentials, PaymentMethod #Ananthu
 from app_nova.services import service_log #Ananthu
 
 
@@ -85,16 +83,16 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
                     raise ValidationError(err)
 
                 if payment_method == 'Etherium':
-                    balance, node_address, private_key = etherium_details_get(work_obj.created_by)
+                    balance, node_address, private_key = service_log.etherium_details_get(work_obj.created_by)
                     if amount >= balance:
                         err = 'You dont have suffiecient balance'
                         service_log.log_save('Work Edit', err, user.username, 0)
                         raise ValidationError(err)
                     
                     recipient = CryptoCredentials.objects.get(user=admin_obj)
-                    txn_id = send_etherium(node_address, private_key, recipient.node_address, amount)
+                    txn_id = service_log.send_etherium(node_address, private_key, recipient.node_address, amount)
                 
-                work_payment_create(work_obj, txn_id, payment_method_obj, work_obj.created_by, admin_obj, amount, 'Paid to admin', user)
+                service_log.work_payment_create(work_obj, txn_id, payment_method_obj, work_obj.created_by, admin_obj, amount, 'Paid to admin', user)
                 msg = f'Payment success, Transaction id - {txn_id}'
 
             if status == 'Completed':
@@ -108,16 +106,16 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
                 
                 if rating >= 3:
                     if payment_method == 'Etherium':
-                        balance, node_address, private_key = etherium_details_get(admin_obj)
+                        balance, node_address, private_key = service_log.etherium_details_get(admin_obj)
                         if amount >= balance:
                             err = 'Admin doesnt have suffiecient balance. Please contact our support team'
                             service_log.log_save('Work Edit', err, admin_obj.username, 0)
                             raise ValidationError(err)
                         
                         recipient = CryptoCredentials.objects.get(user=work_obj.assigned_to)
-                        txn_id = send_etherium(node_address, private_key, recipient.node_address, work_obj.amount)
+                        txn_id = service_log.send_etherium(node_address, private_key, recipient.node_address, work_obj.amount)
 
-                    work_payment_create(work_obj, txn_id, payment_method_obj, admin_obj, work_obj.assigned_to, amount, 'Paid to user', user)
+                    service_log.work_payment_create(work_obj, txn_id, payment_method_obj, admin_obj, work_obj.assigned_to, amount, 'Paid to user', user)
                     msg = f'Payment success, Transaction id - {txn_id}'
 
             work_obj.assigned_to = assigned_to
@@ -209,7 +207,7 @@ def comments_get(request):
 def etherium_status_get(request):
     try:
         user = request.user
-        balance, node_address, private_key = etherium_details_get(user)
+        balance, node_address, private_key = service_log.etherium_details_get(user)
         return {'node_address': node_address, 'balance': balance}
     except CryptoCredentials.DoesNotExist:
         err = f'Crypto Credentials does not exist, user id - {user.id}'
@@ -223,69 +221,17 @@ def transfer_etherium(request, recipient: str, amount: float):
     try:
         user = request.user
 
-        balance, node_address, private_key = etherium_details_get(user)
+        balance, node_address, private_key = service_log.etherium_details_get(user)
     
         if amount >= balance:
             err = "You don't have sufficient balance"
             service_log.log_save('Etherium Transfer', err, user.username, 0)
             raise ValidationError(err)
 
-        txn_id = send_etherium(node_address, private_key, recipient, amount)
+        txn_id = service_log.send_etherium(node_address, private_key, recipient, amount)
         
         return f'Payment success, Transaction id - {txn_id}'
     except CryptoCredentials.DoesNotExist:
         err = f'Crypto Credentials does not exist, user id - {user.id}'
         service_log.log_save('Etherium Transfer', err, user.username, 0)
         raise ValidationError(err)
-
-
-##Function to get etherium balance
-#Author-Ananthu
-def etherium_details_get(user):
-    try:
-        crypto_credentials_obj = CryptoCredentials.objects.get(is_active=True, user=user)
-        node_address = crypto_credentials_obj.node_address
-        private_key = crypto_credentials_obj.private_key
-        web3 = Web3(Web3.HTTPProvider(settings.ETHERIUM_URL))
-        balance = web3.eth.getBalance(node_address)
-        balance = web3.fromWei(balance, 'ether')
-        return balance, node_address, private_key
-    except CryptoCredentials.DoesNotExist:
-        err = f'Crypto Credentials does not exist, user id - {user.id}'
-        service_log.log_save('Etherium status get', err, user.username, 0)
-        raise ValidationError(err)
-
-
-##Function to send etherium
-#Author-Ananthu
-def send_etherium(node_address, private_key, recipient, amount):
-    web3 = Web3(Web3.HTTPProvider(settings.ETHERIUM_URL))
-    nonce = web3.eth.getTransactionCount(node_address)
-    tx = {
-        'nonce': nonce,
-        'to': recipient,
-        'value': web3.toWei(amount, 'ether'),
-        'gas': 2000000,
-        'gasPrice': web3.toWei('50', 'gwei'),
-    }
-    signed_tx = web3.eth.account.signTransaction(tx, private_key)
-    tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
-    return web3.toHex(tx_hash)
-
-
-##Function to create work payment
-#Author-Ananthu
-def work_payment_create(work_obj, txn_id, payment_method_obj, paid_from, paid_to, amount, status, user):
-    work_payment_obj = WorkPayment(
-        work = work_obj,
-        transaction_id = txn_id,
-        payment_method = payment_method_obj,
-        paid_from = paid_from,
-        paid_to = paid_to,
-        amount = amount,
-        status = status,
-        created_by = user,
-        modified_by = user,
-    )
-    work_payment_obj.full_clean()
-    work_payment_obj.save()

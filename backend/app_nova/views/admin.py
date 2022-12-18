@@ -33,7 +33,7 @@ class ToggleUserAPI(ExceptionHandlerMixin, APIView):
         return Response(status=status.HTTP_200_OK, data='Work deleted successfully')
 
 
-##Class to get works list
+##Class to get transactions list
 #Author-Ananthu
 class TransactionListGetAPI(ExceptionHandlerMixin, APIView):
 
@@ -42,3 +42,29 @@ class TransactionListGetAPI(ExceptionHandlerMixin, APIView):
     def get(self, request):
         serializer = TransactionListGetSerializer(transactions_get(request.GET.get('search_term')), many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+##Class to get payment pending list
+#Author-Ananthu
+class PaymentPendingListGetAPI(ExceptionHandlerMixin, APIView):
+
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def get(self, request):
+        serializer = PaymentPendingListGetSerializer(payment_pending_get(request.GET.get('search_term')), many=True)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+##Class to pay user
+#Author-Ananthu
+class PayUserAPI(ExceptionHandlerMixin, APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = PayUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        pay_user(request=request, **serializer.validated_data)
+
+        return Response(status=status.HTTP_200_OK, data='Task edited successfully')

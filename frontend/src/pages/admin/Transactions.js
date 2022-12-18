@@ -13,10 +13,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-import AdminSideNavigation from "../../component/layout/AdminSideNavigation";
+import SideNavigation from "../../component/admin/SideNavigation";
 import NoData from "../../component/layout/NoData";
 
 const theme = createTheme();
@@ -65,7 +64,6 @@ const TransactionsPage = () => {
       });
 
       if (response.status === 200) {
-        console.log(response.data);
         setTransactionList(response.data);
         setApiRes({
           ...apiRes,
@@ -83,35 +81,9 @@ const TransactionsPage = () => {
     }
   };
 
-  const handleDelete = userId => e => {
-    toggleUser(userId);
-  };
-
-  const toggleUser = async userId => {
-    try {
-      const response = await api.delete(`/api/admin/user/toggle/${userId}`);
-
-      if (response.status === 200) {
-        getTransactionList();
-        setApiRes({
-          ...apiRes,
-          showAlert: true,
-          successMsg: response.data,
-        });
-      }
-    } catch (err) {
-      setApiRes({
-        ...apiRes,
-        axiosError: true,
-        errMsg: JSON.stringify(err.response.data),
-        errHeading: 'Toggle User',
-      });
-    }
-  };
-
   return (
     <div>
-      <AdminSideNavigation />
+      <SideNavigation />
 
       <ThemeProvider theme={theme}>
         <CssBaseline />

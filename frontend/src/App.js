@@ -23,6 +23,7 @@ import WorkEditPage from './pages/work/WorkEdit';
 import PaymentPage from './pages/payment/Payment';
 import UserListPage from './pages/admin/UserList';
 import TransactionsPage from './pages/admin/Transactions';
+import PaymentPendingPage from './pages/admin/PaymentPending';
 
 const App = () => {
   return (
@@ -136,6 +137,12 @@ const App = () => {
         <Route path='/admin/transactions' element={
                                         <AuthProvider>
                                           <AdminRoute Component={TransactionsPage}/>
+                                        </AuthProvider>}
+                                      />
+
+        <Route path='/admin/payment/pending' element={
+                                        <AuthProvider>
+                                          <AdminRoute Component={PaymentPendingPage}/>
                                         </AuthProvider>}
                                       />
 

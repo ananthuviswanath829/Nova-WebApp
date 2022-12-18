@@ -13,11 +13,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
+import Button from "@mui/material/Button";
 
 import SideNavigation from "../../component/admin/SideNavigation";
 import NoData from "../../component/layout/NoData";
+import PaymentConfirmModal from "../../component/admin/PaymentConfirmModal";
 
 const theme = createTheme();
 
@@ -40,7 +41,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const UserListPage = () => {
+const PaymentPendingPage = () => {
   const api = useAxios();
 
   const resObj = {
@@ -52,24 +53,25 @@ const UserListPage = () => {
   };
 
   const [apiRes, setApiRes] = useState(resObj);
-  const [userList, setUserList] = useState([]);
+  const [pendingList, setPendingList] = useState([]);
+  const [showPayModal, setShowPayModal] = useState(false);
 
   useEffect(() => {
-    getUsersList();
+    getPendingPaymentList();
   }, []);
 
-  const getUsersList = async searchTerm => {
+  const getPendingPaymentList = async searchTerm => {
     try {
-      const response = await api.get('/api/admin/user/list/get', {
+      const response = await api.get('/api/admin/payment/pending/list/get', {
         params: {search_term: searchTerm}
       });
 
       if (response.status === 200) {
-        setUserList(response.data);
+        setPendingList(response.data);
         setApiRes({
           ...apiRes,
           showAlert: true,
-          successMsg: 'Users get successfully',
+          successMsg: 'Pending payments get successfully',
         });
       }
     } catch (err) {
@@ -77,21 +79,26 @@ const UserListPage = () => {
         ...apiRes,
         axiosError: true,
         errMsg: JSON.stringify(err.response.data),
-        errHeading: 'Users Get',
+        errHeading: 'Pending Payments Get',
       });
     }
   };
 
-  const handleDelete = userId => e => {
-    toggleUser(userId);
+  const [workId, setWorkId] = useState('');
+  const handlePay = row => e => {
+    setWorkId(row.id);
+    setShowPayModal(true);
   };
 
-  const toggleUser = async userId => {
+  const payUser = async () => {
     try {
-      const response = await api.delete(`/api/admin/user/toggle/${userId}`);
+      const response = await api.post('/api/admin/pay/user', {
+        work_id: workId,
+      });
 
+      setShowPayModal(false);
       if (response.status === 200) {
-        getUsersList();
+        getPendingPaymentList();
         setApiRes({
           ...apiRes,
           showAlert: true,
@@ -103,7 +110,7 @@ const UserListPage = () => {
         ...apiRes,
         axiosError: true,
         errMsg: JSON.stringify(err.response.data),
-        errHeading: 'Toggle User',
+        errHeading: 'Pay User',
       });
     }
   };
@@ -117,13 +124,13 @@ const UserListPage = () => {
 
         <div style={{ marginTop: '10px', marginLeft: '210px', marginRight: '10px'}}>
           <div style={{ display: 'flex', margin: '10px', marginTop: '20px'}}>
-            <Typography component="h3" variant="h5" style={{ margin: '5px 0px 10px 20px'}}>{`Users (${userList.length})`}</Typography>
+            <Typography component="h3" variant="h5" style={{ margin: '5px 0px 10px 20px'}}>{`Pending (${pendingList.length})`}</Typography>
             <TextField
               varient="outlined"
               name='workName'
               placeholder="Search........."
-              onChange={e => getUsersList(e.target.value)}
-              style={{width: '60%', left: '10%'}}
+              onChange={e => getPendingPaymentList(e.target.value)}
+              style={{width: '60%', left: '7%'}}
             />
           </div>
           <TableContainer component={Paper}>
@@ -131,30 +138,39 @@ const UserListPage = () => {
               <TableHead>
                 <TableRow>
                   <StyledTableCell align="center">SI No</StyledTableCell>
-                  <StyledTableCell align="center">Full Name</StyledTableCell>
-                  <StyledTableCell align="center">E-mail</StyledTableCell>
-                  <StyledTableCell align="center">Date of Birth</StyledTableCell>
+                  <StyledTableCell align="center">Work Name</StyledTableCell>
+                  <StyledTableCell align="center">Pay To</StyledTableCell>
+                  <StyledTableCell align="center">Amount</StyledTableCell>
+                  <StyledTableCell align="center">Status</StyledTableCell>
+                  <StyledTableCell align="center">Rating</StyledTableCell>
                   <StyledTableCell align="center">Action</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody style={{cursor: 'pointer'}}>
-                {userList.map((row, index) => (
+                {pendingList.map((row, index) => (
                   <StyledTableRow key={row.id}>
                     <StyledTableCell align="center">{index + 1}</StyledTableCell>
-                    <StyledTableCell align="center">{row.full_name}</StyledTableCell>
-                    <StyledTableCell align="center">{row.email}</StyledTableCell>
-                    <StyledTableCell align="center">{row.dob}</StyledTableCell>
-                    <StyledTableCell align="center"><Switch onChange={handleDelete(row.id)} checked={row.is_active} /></StyledTableCell>
+                    <StyledTableCell align="center">{row.name}</StyledTableCell>
+                    <StyledTableCell align="center">{row.pay_to}</StyledTableCell>
+                    <StyledTableCell align="center">{row.amount}</StyledTableCell>
+                    <StyledTableCell align="center">{row.status}</StyledTableCell>
+                    <StyledTableCell align="center">{row.rating}</StyledTableCell>
+                    <StyledTableCell align="center">{row.status === 'Completed' && <Button variant="outlined" onClick={handlePay(row)}>Pay</Button>}</StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
-          {userList.length === 0 && <NoData />}
+          {pendingList.length === 0 && <NoData />}
+          <PaymentConfirmModal
+            showPayModal={showPayModal}
+            setShowPayModal={setShowPayModal}
+            submitForm={payUser}
+          />
         </div>
       </ThemeProvider>
     </div>
   );
 };
 
-export default UserListPage;
+export default PaymentPendingPage;
