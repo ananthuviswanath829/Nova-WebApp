@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView #Ananthu
 
 from app_nova.serializers.account import * #Ananthu
 from app_nova.services.account import * #Ananthu
-from app_nova.models import Skill #Ananthu
+from app_nova.models import Skill, Friends #Ananthu
 
 
 ##Serializer to include superuser status to access token
@@ -86,3 +86,16 @@ class UserProfileGetAPI(ExceptionHandlerMixin, APIView):
     def get(self, request):
         serializer = UserProfileGetSerializer(request.user)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+##Class to get friends request count
+#Author-Ananthu
+class FriendRequestCountGetAPI(ExceptionHandlerMixin, APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        friends_qs = Friends.objects.filter(is_active=True, is_accepted=False)
+        request_sent_qs = friends_qs.filter(user=request.user)
+        request_received_qs = friends_qs.filter(friend=request.user)
+        return Response(status=status.HTTP_200_OK, data=request_sent_qs.count() + request_received_qs.count())

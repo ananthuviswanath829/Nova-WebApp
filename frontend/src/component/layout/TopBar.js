@@ -18,7 +18,8 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import { Button } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import useAxios from '../../utils/useAxios';
 import AuthContext from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -53,7 +54,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -64,6 +64,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function TopBar(props) {
+  const api = useAxios();
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -122,6 +123,23 @@ export default function TopBar(props) {
     if (props.searchTerm !== '') { 
       navigate('/search/result'); 
       props.getSearchResult();
+    }
+  };
+
+  useEffect(() => {
+    getFriendRequests();
+  }, []);
+
+  const [requestCount, setRequestCount] = React.useState(0);
+  const getFriendRequests = async () => {
+    try {
+      const response = await api.get('/api/user/friend/request/count/get');
+
+      if (response.status === 200) {
+        setRequestCount(response.data);
+      }
+    } catch (err) {
+      alert(JSON.stringify(err.response.data));
     }
   };
 
@@ -219,15 +237,6 @@ export default function TopBar(props) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
             variant="h6"
             noWrap
@@ -252,25 +261,9 @@ export default function TopBar(props) {
           <Button variant="contained" onClick={navigateToSearch}>Search</Button>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-
             <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={navigateToFriendRequests}>
-              <Badge badgeContent={4} color="error">
+              <Badge badgeContent={requestCount} color="error">
                 <GroupIcon />
-              </Badge>
-            </IconButton>
-
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
               </Badge>
             </IconButton>
             <IconButton

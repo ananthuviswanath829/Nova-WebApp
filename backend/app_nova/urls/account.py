@@ -9,4 +9,5 @@ urlpatterns = [
     path('all/skills/get', account.AllSkillsGet.as_view()),
     path('profile/edit', account.UserProfileEditAPI.as_view()),
     path('profile/get', account.UserProfileGetAPI.as_view()),
+    path('friend/request/count/get', account.FriendRequestCountGetAPI.as_view()),
 ]
