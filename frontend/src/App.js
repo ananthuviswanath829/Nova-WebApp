@@ -16,7 +16,6 @@ import SearchResultPage from './pages/friend/SearchResult';
 import PersonProfilePage from './pages/friend/PersonProfile';
 import FriendsListPage from './pages/friend/FriendsList';
 import FriendRequestListPage from './pages/friend/FriendRequestList';
-import ChatPage from './pages/message/Chat';
 import WorkListPage from './pages/work/WorkList';
 import WorkCreatePage from './pages/work/WorkCreate';
 import WorkEditPage from './pages/work/WorkEdit';
@@ -87,14 +86,6 @@ const App = () => {
                                       </SearchProvider>
                                     </AuthProvider>}
                                   />
-        
-        <Route path='/chat' element={
-                                <AuthProvider>
-                                  <SearchProvider>
-                                    <PrivateRoute Component={ChatPage}/>
-                                  </SearchProvider>
-                                </AuthProvider>}
-                              />
         
         <Route path='/work/list' element={
                                 <AuthProvider>

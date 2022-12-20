@@ -6,12 +6,6 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import ImageIcon from '@mui/icons-material/Image';
 import Divider from '@mui/material/Divider';
-import { Button } from '@mui/material';
-
-const btnStyle = {
-  height: '90%', 
-  margin: 'auto'
-};
 
 const FriendListItem = props => {
   const navigate = useNavigate();
@@ -31,7 +25,6 @@ const FriendListItem = props => {
           </ListItemAvatar>
           <ListItemText primary={`${props.data.first_name} ${props.data.last_name}`} secondary={props.data.email} />
         </ListItem>
-        <Button variant="outlined" color='success' style={btnStyle}>Message</Button>
       </div>
       <Divider variant="inset" component="li" />
     </>
