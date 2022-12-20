@@ -2,7 +2,7 @@ from datetime import date, datetime #Ananthu
 from decimal import Decimal #Ananthu
 
 from django.conf import settings #Ananthu
-from django.db.models import Q #Ananthu 
+from django.db.models import Q, Avg #Ananthu 
 from django.contrib.auth.models import User #Ananthu
 from django.core.exceptions import ValidationError #Ananthu
 from django.db import transaction #Ananthu
@@ -14,7 +14,7 @@ from app_nova.services import service_log #Ananthu
 ##Function to get work list
 #Author-Ananthu
 def works_get(request):
-    works_qs = Work.objects.filter(Q(is_active=True, created_by=request.user)|Q(is_active=True, assigned_to=request.user))
+    works_qs = Work.objects.filter(Q(is_active=True, created_by=request.user)|Q(is_active=True, assigned_to=request.user)).order_by('-id')
     return works_qs
 
 
@@ -102,8 +102,14 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
                     raise ValidationError(err)
 
                 work_obj.rating = rating
-                msg = 'Work edited successfully. Admin will manually process the payment.'
+                work_obj.status = status
+                work_obj.save()
                 
+                msg = 'Work edited successfully. Admin will manually process the payment.'
+
+                work_avg_rating = Work.objects.filter(is_active=True, assigned_to=work_obj.assigned_to, status='Completed', rating__isnull=False).aggregate(avg_rating=Avg('rating'))
+                work_obj.assigned_to.userprofile_set.filter(is_active=True).update(rating=work_avg_rating['avg_rating'])
+
                 if rating >= 3:
                     if payment_method == 'Etherium':
                         balance, node_address, private_key = service_log.etherium_details_get(admin_obj)
@@ -123,7 +129,6 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
             work_obj.name = work_name
             work_obj.start_date = start_date
             work_obj.end_date = end_date
-            work_obj.status = status
             work_obj.description = description
             work_obj.amount = amount
             work_obj.modified_by = user

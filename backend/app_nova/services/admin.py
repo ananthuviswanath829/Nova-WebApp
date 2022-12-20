@@ -29,7 +29,7 @@ def transactions_get(search_term):
 ##Function to get pending payments
 #Author-Ananthu
 def payment_pending_get(search_term):
-    work_qs = Work.objects.annotate(payment_count=Count('workpayment', filter=Q(workpayment__is_active=True))).filter(is_active=True, payment_count=0).order_by('-id')
+    work_qs = Work.objects.exclude(status='Pending').annotate(payment_count=Count('workpayment', filter=Q(workpayment__is_active=True))).filter(is_active=True, payment_count=1).order_by('-id')
     if search_term not in (None, ''):
         work_qs = work_qs.filter(Q(name__icontains=search_term)|Q(assigned_to__first_name__icontains=search_term)|Q(assigned_to__last_name__icontains=search_term))
     return work_qs
