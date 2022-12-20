@@ -18,6 +18,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         token['is_superuser'] = user.is_superuser
+        token['is_verified_user'] = user.userprofile_set.get(is_active=True).is_verified
         return token
 
 

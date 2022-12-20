@@ -23,6 +23,7 @@ import PaymentPage from './pages/payment/Payment';
 import UserListPage from './pages/admin/UserList';
 import TransactionsPage from './pages/admin/Transactions';
 import PaymentPendingPage from './pages/admin/PaymentPending';
+import VerificationError from './pages/authentication/VerificationError';
 
 const App = () => {
   return (
@@ -139,6 +140,7 @@ const App = () => {
 
         <Route path='/account/verification/:code' element={<AccountVerificationPage />} />
         <Route path='/page-not-found' element={<PageNotFoundPage />} />
+        <Route path='/email-not-verified' element={<VerificationError />} />
       </Routes>
     </div>
   );

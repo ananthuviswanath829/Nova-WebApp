@@ -39,13 +39,18 @@ export const AuthProvider = ({ children }) => {
       });
 
       const data = response.data;
-      setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem('authTokens', JSON.stringify(data));
-      if (jwt_decode(data.access).is_superuser) {
-        navigate('/admin/transactions');
+      const jwt_data = jwt_decode(data.access);
+      if (jwt_data.is_verified_user) {
+        setAuthTokens(data);
+        setUser(jwt_data);
+        localStorage.setItem('authTokens', JSON.stringify(data));
+        if (jwt_data.is_superuser) {
+          navigate('/admin/transactions');
+        } else {
+          navigate('/');
+        }
       } else {
-        navigate('/');
+        navigate('/email-not-verified');
       }
     } catch (err) {
       setApiRes({
