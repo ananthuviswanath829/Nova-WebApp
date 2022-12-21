@@ -35,6 +35,12 @@ function UserCard(props) {
             <Typography variant="subtitle1" paragraph>
               {data.email}
             </Typography>
+            <Typography variant="subtitle1" paragraph>
+              Per Hour Rate - {data.paymentMethod} {data.userPerHourRate}
+            </Typography>
+            <Typography variant="subtitle1" paragraph>
+              Rating - {data.userRating}
+            </Typography>
           </CardContent>
           <CardMedia
             component="img"

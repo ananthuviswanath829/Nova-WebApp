@@ -17,7 +17,7 @@ from django.db import transaction #Ananthu
 
 # from app_nova.views.payment import Blockchain #Ananthu
 from app_nova.services import service_log #Ananthu
-from app_nova.models import UserProfile, EmailVerificationCode, Skill, UserSkill, SearchPreference, CryptoCredentials #Ananthu
+from app_nova.models import UserProfile, EmailVerificationCode, Skill, UserSkill, SearchPreference, CryptoCredentials, PaymentMethod #Ananthu
 
 
 ##Function to register
@@ -109,8 +109,8 @@ def verify_token(token):
 
 ##Function to edit user profile
 #Author-Ananthu
-def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob: datetime, profile_pic: str, skills_list: str, 
-                        experience: str, per_hour_rate: str, availability: str, rating: str, node_address: str, private_key: str):
+def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob: datetime, profile_pic: str, skills_list: str, experience: str, 
+                        per_hour_rate: str, availability: str, rating: str, node_address: str, private_key: str, payment_method: str, per_hour_cost: str):
     try:
         skills_list = json.loads(skills_list)
         
@@ -119,6 +119,7 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
         all_skills_qs = Skill.objects.filter(is_active=True)
         search_preference_obj = SearchPreference.objects.get(is_active=True, user=user)
         crypto_credentials_qs = CryptoCredentials.objects.filter(is_active=True, user=user)
+        payment_method_obj = PaymentMethod.objects.get(is_active=True, name=payment_method)
 
         # image = base64.b64decode(str(profile_pic))       
         # fileName = 'test.jpeg'
@@ -135,6 +136,8 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
             user.save()
 
             userprofile_obj.dob = dob
+            userprofile_obj.per_hour_rate = per_hour_cost
+            userprofile_obj.payment_method = payment_method_obj
             userprofile_obj.save()
 
             search_preference_obj.experience = experience
@@ -187,6 +190,10 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
         service_log.log_save('Profile Edit', err, user.username, 0)
         raise ValidationError(err)
     except SearchPreference.DoesNotExist:
-        err = 'Userprofile does not exist'
+        err = 'Search preference does not exist'
+        service_log.log_save('Profile Edit', err, user.username, 0)
+        raise ValidationError(err)
+    except PaymentMethod.DoesNotExist:
+        err = f'Payment Method does not exist - {payment_method}'
         service_log.log_save('Profile Edit', err, user.username, 0)
         raise ValidationError(err)

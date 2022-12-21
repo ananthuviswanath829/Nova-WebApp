@@ -40,6 +40,8 @@ const UserProfileEditPage = () => {
     rating: '',
     nodeAddress: '',
     privateKey: '',
+    paymentMethod: '',
+    perHourCost: '',
   };
 
   const {values, setValues, handleInputChange} = useForm(initialValues);
@@ -75,6 +77,7 @@ const UserProfileEditPage = () => {
   const [experienceList, setExperienceList] = useState([]);
   const [skillsList, setSkillsList] = useState([]);
   const [imageSrc, setImageSrc] = useState('');
+  const paymentMethodList = ['Etherium', 'SudoCoin'];
 
   const handleExperienceChange = () => {
     if (skill !== '' && experience !== 0) { setExperienceList([...experienceList, {skill: skill, experience: experience}]); }
@@ -128,6 +131,8 @@ const UserProfileEditPage = () => {
           rating: response.data.rating,
           nodeAddress: response.data.node_address,
           privateKey: response.data.private_key,
+          perHourCost: response.data.user_per_hour_rate,
+          paymentMethod: response.data.payment_method,
         });
         setExperienceList(response.data.skills_list);
       }
@@ -161,6 +166,8 @@ const UserProfileEditPage = () => {
         rating: values.rating,
         node_address: values.nodeAddress,
         private_key: values.privateKey,
+        payment_method: values.paymentMethod,
+        per_hour_cost: values.perHourCost,
       });
 
       if (response.status === 200) {
@@ -328,6 +335,37 @@ const UserProfileEditPage = () => {
                 />
               ))
             }
+          </Grid>
+
+          <Grid style={{margin: '10px'}}>
+            <Grid container spacing={2} style={{display: 'flex', marginTop: '5px'}}>
+              <Grid item xs={12} md={6}>
+              <Select
+                  labelId="demo-simple-select-label1"
+                  id="demo-simple-select1"
+                  value={values.paymentMethod}
+                  label="Payment Method"
+                  name='paymentMethod'
+                  onChange={handleInputChange('paymentMethod')}
+                  style={{width: '100%'}}
+                >
+                  {
+                    paymentMethodList.map((data, index) => (
+                      <MenuItem key={index} value={data}>{data}</MenuItem>
+                    ))
+                  }
+                </Select>
+              </Grid>
+              <Grid item xs={12} md={6} style={{marginTop: '-8px'}}>
+                <TextField
+                  varient="outlined"
+                  label="Per Hour Cost"
+                  name='perHourCost'
+                  value={values.perHourCost}
+                  onChange={handleInputChange('perHourCost')}
+                />
+              </Grid>
+            </Grid>
           </Grid>
 
           <Grid style={{margin: '10px'}}>

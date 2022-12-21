@@ -33,6 +33,8 @@ class UserProfileEditSerializer(serializers.Serializer):
     rating = serializers.CharField(required=True, allow_blank=False)
     node_address = serializers.CharField(required=False, allow_blank=True)
     private_key = serializers.CharField(required=False, allow_blank=True)
+    payment_method = serializers.CharField(required=False, allow_blank=True)
+    per_hour_cost = serializers.CharField(required=False, allow_blank=True)
 
 
 ##Serializer for user profile get
@@ -50,12 +52,13 @@ class UserProfileGetSerializer(serializers.Serializer):
     rating = serializers.SerializerMethodField()
     node_address = serializers.SerializerMethodField()
     private_key = serializers.SerializerMethodField()
+    user_per_hour_rate = serializers.SerializerMethodField()
+    payment_method = serializers.SerializerMethodField()
+    user_rating = serializers.SerializerMethodField()
 
     def get_dob(self, obj):
-        if obj.userprofile_set.get(is_active=True, user=obj).dob is not None:
-            return obj.userprofile_set.get(is_active=True, user=obj).dob.strftime("%Y-%m-%d")
-        else:
-            return ''
+        dob = obj.userprofile_set.get(is_active=True, user=obj).dob
+        return dob.strftime("%Y-%m-%d") if dob is not None else ''
     
     def get_skills_list(self, obj):
         user_skills_qs = UserSkill.objects.select_related('skill').filter(is_active=True, user=obj)
@@ -84,4 +87,14 @@ class UserProfileGetSerializer(serializers.Serializer):
     def get_private_key(self, obj):
         crypto_credentials_qs = obj.cryptocredentials_set.filter(is_active=True, user=obj)
         return crypto_credentials_qs[0].private_key if crypto_credentials_qs.exists() else ''
-        
+    
+    def get_payment_method(self, obj):
+        payment_method_obj = obj.userprofile_set.get(is_active=True, user=obj).payment_method
+        return payment_method_obj.name if payment_method_obj is not None else ''
+    
+    def get_user_per_hour_rate(self, obj):
+        per_hour_rate = obj.userprofile_set.get(is_active=True, user=obj).per_hour_rate
+        return str(per_hour_rate) if per_hour_rate is not None else ''
+    
+    def get_user_rating(self, obj):
+        return str(obj.userprofile_set.get(is_active=True, user=obj).rating)

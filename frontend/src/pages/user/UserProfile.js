@@ -37,6 +37,9 @@ const UserProfilePage = () => {
     perHourRate: '',
     availability: '',
     rating: '',
+    paymentMethod: '',
+    userPerHourRate: '',
+    userRating: '',
   };
 
   const {values, setValues} = useForm(initialValues);
@@ -74,6 +77,9 @@ const UserProfilePage = () => {
           perHourRate: response.data.per_hour_rate,
           availability: response.data.availability,
           rating: response.data.rating,
+          paymentMethod: response.data.payment_method,
+          userPerHourRate: response.data.user_per_hour_rate,
+          userRating: response.data.user_rating,
         });
         setApiRes({
           ...apiRes,
