@@ -14,7 +14,7 @@ class UserController:
     def __init__(self, user_list) -> None:
         self.data = pd.DataFrame(user_list)
         self.user_ctrl = setup_system()
-    
+
 
     #Function to create sim instance
     def create_sim_instance(self, name):
@@ -22,25 +22,25 @@ class UserController:
     
 
     #Function to calculate scores
-    def calculate(self, curr_user_rating, curr_user_hourly_rate):
-        self.user_set = {'user_id': [], 'experience': [], 'rating': [], 'per_hour_rate': [], 'availability': [], 'score': []}
+    def calculate(self, pref_experience, pref_per_hour_rate, pref_availability, pref_rating):
+        self.user_set = {'user_id': [], 'score': []}
 
         for index in range(len(self.data)):
             try:
-                self.name.input['User Rating'] = curr_user_rating
-                self.name.input['User Hourly Rate'] = curr_user_hourly_rate
-                self.name.input['Experience'] = self.data.experience.iloc[index]
-                self.name.input['Hourly Rate'] = int(self.data.per_hour_rate.iloc[index])
-                self.name.input['Availability'] = int(self.data.availability.iloc[index])
-                self.name.input['Rating'] = int(self.data.rating.iloc[index])
-                
+                self.name.input['Pref Rating'] = float(pref_rating)
+                self.name.input['Pref Hourly Rate'] = float(pref_per_hour_rate)
+                self.name.input['Pref Experience'] = float(pref_experience)
+                self.name.input['Pref Availability'] = float(pref_availability)
+                self.name.input['Hourly Rate'] = float(self.data.per_hour_rate.iloc[index])
+                self.name.input['Rating'] = float(self.data.rating.iloc[index])
+                self.name.input['Availability'] = float(self.data.availability.iloc[index])
+                self.name.input['Experience'] = float(self.data.experience.iloc[index])
+                print(self.name.input)
+
                 self.name.compute()
                 self.user_set['user_id'].append(self.data.user_id.iloc[index])
-                self.user_set['experience'].append(self.data.experience.iloc[index])
-                self.user_set['rating'].append(self.data.rating.iloc[index])
-                self.user_set['per_hour_rate'].append(self.data.per_hour_rate.iloc[index])
-                self.user_set['availability'].append(self.data.availability.iloc[index])
                 self.user_set['score'].append(self.name.output['Recommendation Score'])
+                print(self.name.output)
             except:
                 pass
     
@@ -49,4 +49,5 @@ class UserController:
     def results(self):
         res = pd.DataFrame.from_dict(self.user_set)
         res = res.sort_values(by=['score'], ascending=[False])
+        res = res.to_dict('records')
         return res

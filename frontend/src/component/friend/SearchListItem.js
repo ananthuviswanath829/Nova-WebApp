@@ -33,7 +33,7 @@ const SearchListItem = props => {
               <ImageIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary={`${props.data.first_name} ${props.data.last_name}`} secondary={props.data.email} />
+          <ListItemText primary={`${props.data.full_name}`} secondary={props.data.email} />
         </ListItem>
         {props.data.status === 'Not friends' && <Button 
                                                   variant="outlined" 

@@ -18,9 +18,7 @@ class SearchResultGetAPI(ExceptionHandlerMixin, APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        queryset = users_get(request)
-        serializer = UserSearchGetSerializer(queryset, many=True, context={'request': request})
-        return Response(status=status.HTTP_200_OK, data=serializer.data)
+        return Response(status=status.HTTP_200_OK, data=search_users(request))
 
 
 ##Class to add friend
