@@ -189,7 +189,7 @@ def user_details_get(logged_in_user, user_obj):
     friends_qs = Friends.objects.filter(Q(is_active=True,user=logged_in_user,friend=user_obj)|Q(is_active=True,user=user_obj,friend=logged_in_user))
     if not friends_qs.exists():
         status = 'Not friends'
-    if friends_qs[0].is_accepted:
+    elif friends_qs[0].is_accepted:
         status = 'Friends'
     else:
         status = 'Request sent'

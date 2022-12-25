@@ -40,7 +40,7 @@ def user_register(request, first_name: str, last_name: str, email: str, password
     token = ''.join(random.choice(characters) for i in range(20))
 
     experience = 'Junior'
-    per_hour_cost = 'Low'
+    per_hour_rate = 'Low'
     availability = 'Medium'
     rating = 'Good'
 
@@ -64,7 +64,7 @@ def user_register(request, first_name: str, last_name: str, email: str, password
         preference_obj = SearchPreference(
             user = user_obj,
             experience = experience,
-            per_hour_cost = per_hour_cost,
+            per_hour_rate = per_hour_rate,
             availability = availability,
             rating = rating,
             created_by = user_obj,
@@ -120,7 +120,14 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
         search_preference_obj = SearchPreference.objects.get(is_active=True, user=user)
         crypto_credentials_qs = CryptoCredentials.objects.filter(is_active=True, user=user)
         payment_method_obj = PaymentMethod.objects.get(is_active=True, name=payment_method)
+        
+        # # profile_pic = profile_pic.split(',')[-1]
+        # profile_pic_encoded = profile_pic.encode('ascii')
 
+        # with open('profile_pic.png', 'wb') as fh:
+        #     print(profile_pic_encoded)
+        #     fh.write(profile_pic_encoded.decode('base64'))
+        #     print('here')
         # image = base64.b64decode(str(profile_pic))       
         # fileName = 'test.jpeg'
 
@@ -138,6 +145,7 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
             userprofile_obj.dob = dob
             userprofile_obj.per_hour_rate = per_hour_cost
             userprofile_obj.payment_method = payment_method_obj
+            userprofile_obj.profile_pic = profile_pic
             userprofile_obj.save()
 
             search_preference_obj.experience = experience

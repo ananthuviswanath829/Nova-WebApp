@@ -1,5 +1,3 @@
-from .image import Image #Ananthu
-
 from .paymentmethod import PaymentMethod #Ananthu
 
 from .userprofile import UserProfile #Ananthu

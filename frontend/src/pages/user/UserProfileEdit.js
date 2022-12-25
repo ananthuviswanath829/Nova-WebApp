@@ -61,7 +61,6 @@ const UserProfileEditPage = () => {
     compressInitial: null,
   };
 
-  const initialImage = '';
 
   const resObj = {
     axiosError: false,
@@ -77,6 +76,7 @@ const UserProfileEditPage = () => {
   const [experienceList, setExperienceList] = useState([]);
   const [skillsList, setSkillsList] = useState([]);
   const [imageSrc, setImageSrc] = useState('');
+  const [initialImage, setInitialImage] = useState('');
   const paymentMethodList = ['Etherium', 'SudoCoin'];
 
   const handleExperienceChange = () => {
@@ -119,6 +119,7 @@ const UserProfileEditPage = () => {
           showAlert: true,
           successMsg: 'Profile details get successfully',
         });
+        setInitialImage(response.data.profile_pic);
         setValues({
           ...values, 
           firstName: response.data.first_name,
@@ -187,6 +188,11 @@ const UserProfileEditPage = () => {
     }
   };
 
+  const handleImage = imgUri => {
+    setImageSrc(imgUri);
+  };
+
+
   return (
     <div>
       <TopBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} getSearchResult={getSearchResult} />
@@ -197,7 +203,7 @@ const UserProfileEditPage = () => {
             <ReactImagePickerEditor
               config={config2}
               imageSrcProp={initialImage}
-              imageChanged={(newDataUri) => { setImageSrc(newDataUri) }} />
+              imageChanged={(newDataUri) => { handleImage(newDataUri) }} />
           </Grid>
           
           <Grid container spacing={2} style={{display : 'flex'}}>

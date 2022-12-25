@@ -44,7 +44,7 @@ class UserProfileGetSerializer(serializers.Serializer):
     last_name = serializers.CharField()
     email = serializers.CharField()
     dob = serializers.SerializerMethodField()
-    # profile_pic = serializers.CharField()
+    profile_pic = serializers.SerializerMethodField()
     skills_list = serializers.SerializerMethodField()
     experience = serializers.SerializerMethodField()
     per_hour_rate = serializers.SerializerMethodField()
@@ -55,6 +55,10 @@ class UserProfileGetSerializer(serializers.Serializer):
     user_per_hour_rate = serializers.SerializerMethodField()
     payment_method = serializers.SerializerMethodField()
     user_rating = serializers.SerializerMethodField()
+
+    def get_profile_pic(self, obj):
+        profile_pic = obj.userprofile_set.get(is_active=True, user=obj).profile_pic
+        return profile_pic if profile_pic is not None else ''
 
     def get_dob(self, obj):
         dob = obj.userprofile_set.get(is_active=True, user=obj).dob

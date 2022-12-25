@@ -21,8 +21,8 @@ class Command(BaseCommand):
             userprofile_obj.full_clean()
             userprofile_obj.save()
 
-            node_address = '0x57B585e8236eA1283f99eCdD6709485Dd39F4654'
-            private_key = '987efb9ac26719d0b71d4f3b4042d450b99d895608b052554b10f5a34028679d'
+            node_address = '0x61D99D0746aD91581BB833c45264ea68F012C819'
+            private_key = 'cc25f0a47857a0bf900ebfe478f0c55118e314543242aa9dad4cdaffbb564bc6'
             crypto_obj = CryptoCredentials(
                 user = user_obj,
                 node_address = node_address,

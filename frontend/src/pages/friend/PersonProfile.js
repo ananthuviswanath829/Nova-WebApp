@@ -30,7 +30,7 @@ const PersonProfilePage = () => {
     email: '',
     dob: '',
     skillsList: [],
-    image: 'https://source.unsplash.com/random',
+    image: '',
     imageLabel: 'Image Text',
     paymentMethod: '',
     userPerHourRate: '',
@@ -70,6 +70,7 @@ const PersonProfilePage = () => {
           paymentMethod: response.data.payment_method,
           userPerHourRate: response.data.user_per_hour_rate,
           userRating: response.data.user_rating,
+          image: response.data.profile_pic,
         });
         setApiRes({
           ...apiRes,

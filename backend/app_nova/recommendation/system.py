@@ -83,8 +83,8 @@ def setup_system():
     rule_6 = ctrl.Rule(pref_hourly_rate['Low'] & (pref_rating['Good'] | pref_rating['Weak']) & pref_availability['Low'] & pref_experience['Mid Level'] & (
                 (experience['Senior'] | experience['Mid Level']) & (rating['Good'] | rating['Weak']) & (hourly_rate['Low']) & (availability['Low'] | availability['Medium'])), recommend['Low'])
 
-    rule_7 = ctrl.Rule(pref_hourly_rate['Medium'] & (pref_rating['High'] | pref_rating['Very Good']) & (pref_availability['High'] | pref_availability['Medium']) & (pref_experience['Senior'] | pref_experience['Mid Level']) & (
-                (experience['Senior'] | experience['Mid Level']) & (rating['Very Good'] | rating['High']) & (hourly_rate['Medium']) & (availability['High'] | availability['Medium'])), recommend['Medium'])
+    rule_7 = ctrl.Rule(pref_hourly_rate['Medium'] & (pref_rating['Good'] | pref_rating['Very Good']) & (pref_availability['High'] | pref_availability['Medium']) & (pref_experience['Senior'] | pref_experience['Mid Level']) & (
+                (experience['Senior'] | experience['Mid Level']) & (rating['Very Good'] | rating['Good']) & (hourly_rate['Medium']) & (availability['High'] | availability['Medium'])), recommend['Medium'])
 
     user_ctrl = ctrl.ControlSystem([rule_1, rule_2, rule_3, rule_4, rule_5, rule_6, rule_7])
 
