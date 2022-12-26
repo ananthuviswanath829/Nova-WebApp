@@ -8,6 +8,8 @@ import { Select, MenuItem } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import { InputLabel } from '@mui/material';
+import { FormControl } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -66,24 +68,27 @@ const WorkForm = props => {
           </Grid>
         </Grid>
 
-        <Grid container spacing={2} style={{display : 'flex', marginTop: '2px',  marginLeft: '-23px'}}>
+        <Grid container spacing={2} style={{display : 'flex',  marginLeft: '-30px'}}>
           <Grid item xs={12} md={6}>
             { props.mode === 'create' &&
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Friends"
-                value={props.values.userId}
-                onChange={props.handleInputChange('userId')}
-                style={{width: '100%'}}
-                defaultValue=""
-              >
-                {
-                  props.friendsList.map((data, index) => (
-                    <MenuItem key={index} value={data.user_id}>{`${data.first_name} ${data.last_name}`}</MenuItem>
-                  ))
-                }
-              </Select>
+              <FormControl>
+                <InputLabel id="friends">Friends</InputLabel>
+                <Select
+                  labelId="friends"
+                  id="friends"
+                  label="Friends"
+                  value={props.values.userId}
+                  onChange={props.handleInputChange('userId')}
+                  style={{width: '100%'}}
+                  defaultValue=""
+                >
+                  {
+                    props.friendsList.map((data, index) => (
+                      <MenuItem key={index} value={data.user_id}>{`${data.first_name} ${data.last_name}`}</MenuItem>
+                    ))
+                  }
+                </Select>
+              </FormControl>
             }
             { props.mode === 'edit' &&
               <TextField
@@ -98,44 +103,50 @@ const WorkForm = props => {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Status"
-              value={props.values.status}
-              onChange={props.handleInputChange('status')}
-              style={{width: '100%'}}
-              defaultValue=""
-            >
-              {
-                statusList.map((data, index) => (
-                  <MenuItem key={index} value={data}>{data}</MenuItem>
-                ))
-              }
-            </Select>
+            <FormControl>
+              <InputLabel id="status">Status</InputLabel>
+              <Select
+                labelId="status"
+                id="status"
+                label="Status"
+                value={props.values.status}
+                onChange={props.handleInputChange('status')}
+                style={{width: '100%'}}
+                defaultValue=""
+              >
+                {
+                  statusList.map((data, index) => (
+                    <MenuItem key={index} value={data}>{data}</MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
 
-        <Grid container spacing={2} style={{display : 'flex', marginTop: '2px',  marginLeft: '-23px'}}>
+        <Grid container spacing={2} style={{display : 'flex', marginLeft: '-30px'}}>
           <Grid item xs={12} md={6}>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Payment Method"
-              value={props.values.paymentMethod}
-              onChange={props.handleInputChange('paymentMethod')}
-              style={{width: '100%'}}
-              defaultValue=""
-            >
-              {
-                paymentMethodList.map((data, index) => (
-                  <MenuItem key={index} value={data}>{data}</MenuItem>
-                ))
-              }
-            </Select>
+            <FormControl>
+              <InputLabel id="paymentMethod">Payment Method</InputLabel>
+              <Select
+                labelId="paymentMethod"
+                id="paymentMethod"
+                label="Payment Method"
+                value={props.values.paymentMethod}
+                onChange={props.handleInputChange('paymentMethod')}
+                style={{width: '100%'}}
+                defaultValue=""
+              >
+                {
+                  paymentMethodList.map((data, index) => (
+                    <MenuItem key={index} value={data}>{data}</MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
           </Grid>
 
-          <Grid item xs={12} md={6} style={{marginTop: '-8px', marginLeft: '-8px'}}>
+          <Grid item xs={12} md={6}>
             <TextField
               varient="outlined"
               label="Amount"
@@ -147,7 +158,7 @@ const WorkForm = props => {
           </Grid>
         </Grid>
 
-        <Grid container spacing={2} style={{marginTop: '18px'}}>
+        <Grid container spacing={2} style={{marginTop: '5px'}}>
           <TextField
             id="outlined-multiline-static"
             label="Description"

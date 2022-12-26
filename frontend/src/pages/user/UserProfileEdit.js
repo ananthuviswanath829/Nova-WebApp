@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import { Button } from '@mui/material';
 import { Select, MenuItem } from '@mui/material';
 import { Chip } from '@mui/material';
+import { InputLabel } from '@mui/material';
+import { FormControl } from '@mui/material';
 
 import { DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -284,23 +286,26 @@ const UserProfileEditPage = () => {
 
             <Grid container spacing={2} style={{display : 'flex', marginTop: '5px'}}>
               <Grid item xs={6} md={4}>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={skill}
-                  label="Skill"
-                  onChange={(e) => setSkill(e.target.value)}
-                  style={{width: '100%'}}
-                >
-                  {
-                    skillsList.map((data, index) => (
-                      <MenuItem key={index} value={data.name}>{data.name}</MenuItem>
-                    ))
-                  }
-                </Select>
+                <FormControl>
+                  <InputLabel id="skill">Skill</InputLabel>
+                  <Select
+                    labelId="skill"
+                    id="skill"
+                    value={skill}
+                    label="Skill"
+                    onChange={(e) => setSkill(e.target.value)}
+                    style={{width: '100%'}}
+                  >
+                    {
+                      skillsList.map((data, index) => (
+                        <MenuItem key={index} value={data.name}>{data.name}</MenuItem>
+                      ))
+                    }
+                  </Select>
+                </FormControl>
               </Grid>
 
-              <Grid item xs={6} md={4} style={{marginTop: '-7px'}}>
+              <Grid item xs={6} md={4}>
                 <TextField
                   varient="outlined"
                   label="Experience"
@@ -315,7 +320,7 @@ const UserProfileEditPage = () => {
                 />
               </Grid>
 
-              <Grid item xs={6} md={4}>
+              <Grid item xs={6} md={4} style={{marginTop: '7px'}}>
                 <Button 
                   variant="outlined" 
                   color='success' 
@@ -346,23 +351,27 @@ const UserProfileEditPage = () => {
           <Grid style={{margin: '10px'}}>
             <Grid container spacing={2} style={{display: 'flex', marginTop: '5px'}}>
               <Grid item xs={12} md={6}>
-              <Select
-                  labelId="demo-simple-select-label1"
-                  id="demo-simple-select1"
-                  value={values.paymentMethod}
-                  label="Payment Method"
-                  name='paymentMethod'
-                  onChange={handleInputChange('paymentMethod')}
-                  style={{width: '100%'}}
-                >
-                  {
-                    paymentMethodList.map((data, index) => (
-                      <MenuItem key={index} value={data}>{data}</MenuItem>
-                    ))
-                  }
-                </Select>
+                <FormControl>
+                  <InputLabel id="paymentMethod">Payment Method</InputLabel>
+                  <Select
+                    labelId="paymentMethod"
+                    id="paymentMethod"
+                    value={values.paymentMethod}
+                    label="Payment Method"
+                    name='paymentMethod'
+                    onChange={handleInputChange('paymentMethod')}
+                    style={{width: '100%'}}
+                  >
+                    {
+                      paymentMethodList.map((data, index) => (
+                        <MenuItem key={index} value={data}>{data}</MenuItem>
+                      ))
+                    }
+                  </Select>
+                </FormControl>
               </Grid>
-              <Grid item xs={12} md={6} style={{marginTop: '-8px'}}>
+
+              <Grid item xs={12} md={6}>
                 <TextField
                   varient="outlined"
                   label="Per Hour Cost"
@@ -376,32 +385,39 @@ const UserProfileEditPage = () => {
 
           <Grid style={{margin: '10px'}}>
             <Typography component="h2" variant="h5">Search Preference</Typography>
+            
+            <Typography style={{color:"#6c757d", margin: '5px'}} variant="inherit"><i>Note: You will get search results based on the preferences you set.</i></Typography>
 
-            <Grid container spacing={2} style={{display : 'flex', marginTop: '5px'}}>
+            <Grid container spacing={2} style={{display : 'flex'}}>
               <Grid item xs={12} md={6}>
-                <Select
-                  labelId="demo-simple-select-label1"
-                  id="demo-simple-select1"
-                  value={values.experience}
-                  label="Experience"
-                  name='experience'
-                  onChange={handleInputChange('experience')}
-                  style={{width: '100%'}}
-                >
-                  {
-                    preferenceList.experience.map((data, index) => (
-                      <MenuItem key={index} value={data}>{data}</MenuItem>
-                    ))
-                  }
-                </Select>
+                <FormControl>
+                  <InputLabel id="experience">Experience</InputLabel>
+                  <Select
+                    labelId="experience"
+                    id="experience"
+                    value={values.experience}
+                    label="Experience"
+                    name='experience'
+                    onChange={handleInputChange('experience')}
+                    style={{width: '100%'}}
+                  >
+                    {
+                      preferenceList.experience.map((data, index) => (
+                        <MenuItem key={index} value={data}>{data}</MenuItem>
+                      ))
+                    }
+                  </Select>
+                </FormControl>
               </Grid>
 
-              <Grid item xs={12} md={6} style={{marginTop: '0px'}}>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
+              <Grid item xs={12} md={6}>
+                <FormControl>
+                  <InputLabel id="perHourRate">Per Hour Rate</InputLabel>
+                  <Select
+                    labelId="perHourRate"
+                    id="perHourRate"
                     value={values.perHourRate}
-                    label="Per Hour Cost"
+                    label="Per Hour Rate"
                     name='perHourRate'
                     onChange={handleInputChange('perHourRate')}
                     style={{width: '100%'}}
@@ -412,32 +428,38 @@ const UserProfileEditPage = () => {
                       ))
                     }
                   </Select>
+                </FormControl>
               </Grid>
             </Grid>
 
-            <Grid container spacing={2} style={{display : 'flex', marginTop: '5px'}}>
+            <Grid container spacing={2} style={{display : 'flex'}}>
               <Grid item xs={12} md={6}>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={values.availability}
-                  label="Availability"
-                  name='availability'
-                  onChange={handleInputChange('availability')}
-                  style={{width: '100%'}}
-                >
-                  {
-                    preferenceList.availability.map((data, index) => (
-                      <MenuItem key={index} value={data}>{data}</MenuItem>
-                    ))
-                  }
-                </Select>
+                <FormControl>
+                  <InputLabel id="availability">Availability</InputLabel>
+                  <Select
+                    labelId="availability"
+                    id="availability"
+                    value={values.availability}
+                    label="Availability"
+                    name='availability'
+                    onChange={handleInputChange('availability')}
+                    style={{width: '100%'}}
+                  >
+                    {
+                      preferenceList.availability.map((data, index) => (
+                        <MenuItem key={index} value={data}>{data}</MenuItem>
+                      ))
+                    }
+                  </Select>
+                </FormControl>
               </Grid>
 
-              <Grid item xs={12} md={6} style={{marginTop: '0px'}}>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
+              <Grid item xs={12} md={6}>
+                <FormControl>
+                  <InputLabel id="rating">Rating</InputLabel>
+                  <Select
+                    labelId="rating"
+                    id="rating"
                     value={values.rating}
                     label="Rating"
                     name='rating'
@@ -450,6 +472,7 @@ const UserProfileEditPage = () => {
                       ))
                     }
                   </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </Grid>
