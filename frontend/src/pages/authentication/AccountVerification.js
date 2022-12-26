@@ -23,7 +23,7 @@ const AccountVerificationPage = () => {
 
   const checkCodeExists = async () => {
     try {
-      const response = await axios.get(`${baseURL}/api/user/check/verification/token`, {
+      await axios.get(`${baseURL}/api/user/check/verification/token`, {
         params: { token: token }
       });
     } catch (error) {

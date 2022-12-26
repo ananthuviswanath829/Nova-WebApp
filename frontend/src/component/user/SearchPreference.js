@@ -11,8 +11,6 @@ import { useNavigate } from 'react-router-dom';
 
 function SearchPreference(props) {
   const navigate = useNavigate();
-
-  const { data } = props;
   
   const navigateToSkillEdit = () => {
     const docUrIArr = window.location.href.split('/');

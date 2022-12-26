@@ -11,21 +11,13 @@ import Button from '@mui/material/Button';
 import { InputLabel } from '@mui/material';
 import { FormControl } from '@mui/material';
 
-import { useNavigate } from 'react-router-dom';
-
 const WorkForm = props => {
-  const navigate = useNavigate();
-
   const statusList = ['Pending', 'Assigned', 'In Progress', 'Blocked', 'Completed'];
   const paymentMethodList = ['Etherium', 'SudoCoin'];
 
   const submitForm = e => {
     e.preventDefault();
     props.submitForm();
-  };
-
-  const navigateToPayment = () => {
-    navigate('/payment');
   };
 
   return (
