@@ -66,8 +66,8 @@ def work_payment_create(work_obj, txn_id, payment_method_obj, paid_from, paid_to
 #Author-Ananthu
 def etherium_details_get(user):
     crypto_credentials_obj = CryptoCredentials.objects.get(is_active=True, user=user)
-    node_address = crypto_credentials_obj.node_address
-    private_key = crypto_credentials_obj.private_key
+    node_address = crypto_credentials_obj.eth_node_address
+    private_key = crypto_credentials_obj.eth_private_key
     web3 = Web3(Web3.HTTPProvider(settings.ETHERIUM_URL))
     balance = web3.eth.getBalance(node_address)
     balance = web3.fromWei(balance, 'ether')

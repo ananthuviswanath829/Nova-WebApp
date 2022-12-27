@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import SearchContext from "../../context/SearchContext";
 import useAxios from "../../utils/useAxios";
@@ -18,6 +19,7 @@ const theme = createTheme();
 
 const WorkCreatePage = () => {
   const api = useAxios();
+  const navigate = useNavigate();
 
   const { searchTerm, setSearchTerm, getSearchResult } = useContext(SearchContext);
 
@@ -80,6 +82,7 @@ const WorkCreatePage = () => {
       });
 
       if (response.status === 200) {
+        navigate('/work/list');
         setApiRes({
           ...apiRes,
           showAlert: true,

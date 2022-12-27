@@ -2,14 +2,14 @@ from datetime import date, datetime #Ananthu
 from decimal import Decimal #Ananthu
 
 from django.conf import settings #Ananthu
-from django.db.models import Q, Avg #Ananthu 
+from django.db.models import Q, Avg, F #Ananthu 
 from django.contrib.auth.models import User #Ananthu
 from django.core.exceptions import ValidationError #Ananthu
 from django.db import transaction #Ananthu
 
-from app_nova.models import Work, WorkComment, CryptoCredentials, PaymentMethod #Ananthu
+from app_nova.models import Work, WorkComment, CryptoCredentials, PaymentMethod, UserProfile #Ananthu
 from app_nova.services import service_log #Ananthu
-
+from app_nova.blockchain.blockchain import send_super_coins #Ananthu
 
 ##Function to get work list
 #Author-Ananthu
@@ -82,6 +82,7 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
                     service_log.log_save('Work Edit', err, user.username, 0)
                     raise ValidationError(err)
 
+                recipient = CryptoCredentials.objects.get(user=admin_obj)
                 if payment_method == 'Etherium':
                     balance, node_address, private_key = service_log.etherium_details_get(work_obj.created_by)
                     if amount >= balance:
@@ -89,9 +90,23 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
                         service_log.log_save('Work Edit', err, user.username, 0)
                         raise ValidationError(err)
                     
-                    recipient = CryptoCredentials.objects.get(user=admin_obj)
                     txn_id = service_log.send_etherium(node_address, private_key, recipient.node_address, amount)
-                
+                else:
+                    userprofile_obj = user.userprofile_set.get(is_active=True)
+                    balance = userprofile_obj.super_coins
+                    if amount > balance:
+                        err = 'You dont have suffiecient balance'
+                        service_log.log_save('Work Edit', err, user.username, 0)
+                        raise ValidationError(err)
+                    
+                    node_address = user.cryptocredentials_set.get(is_active=True).super_coin_node_address
+                    admin_node_address = admin_obj.cryptocredentials_set.get(is_active=True).super_coin_node_address
+
+                    txn_id = send_super_coins(node_address, admin_node_address, amount)
+                    userprofile_obj.super_coins = userprofile_obj.super_coins - amount
+                    userprofile_obj.save()
+                    admin_obj.userprofile_set.filter(is_active=True).update(super_coins = F('super_coins') + amount)
+
                 service_log.work_payment_create(work_obj, txn_id, payment_method_obj, work_obj.created_by, admin_obj, amount, 'Paid to admin', user)
                 msg = f'Payment success, Transaction id - {txn_id}'
 
@@ -111,6 +126,7 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
                 work_obj.assigned_to.userprofile_set.filter(is_active=True).update(rating=work_avg_rating['avg_rating'])
 
                 if rating >= 3:
+                    recipient = CryptoCredentials.objects.get(user=work_obj.assigned_to)
                     if payment_method == 'Etherium':
                         balance, node_address, private_key = service_log.etherium_details_get(admin_obj)
                         if amount >= balance:
@@ -118,8 +134,24 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
                             service_log.log_save('Work Edit', err, admin_obj.username, 0)
                             raise ValidationError(err)
                         
-                        recipient = CryptoCredentials.objects.get(user=work_obj.assigned_to)
                         txn_id = service_log.send_etherium(node_address, private_key, recipient.node_address, work_obj.amount)
+                    else:
+                        adminprofile_obj = admin_obj.userprofile_set.get(is_active=True)
+                        userprofile_obj = work_obj.assigned_to.userprofile_set.get(is_active=True)
+                        balance = adminprofile_obj.super_coins
+                        if amount > balance:
+                            err = 'You dont have suffiecient balance'
+                            service_log.log_save('Work Edit', err, user.username, 0)
+                            raise ValidationError(err)
+                        
+                        node_address = recipient.super_coin_node_address
+                        admin_node_address = admin_obj.cryptocredentials_set.get(is_active=True).super_coin_node_address
+
+                        txn_id = send_super_coins(admin_node_address, node_address, amount)
+                        userprofile_obj.super_coins = userprofile_obj.super_coins + amount
+                        userprofile_obj.save()
+                        adminprofile_obj.super_coins = adminprofile_obj.super_coins - amount
+                        adminprofile_obj.save()
 
                     service_log.work_payment_create(work_obj, txn_id, payment_method_obj, admin_obj, work_obj.assigned_to, amount, 'Paid to user', user)
                     msg = f'Payment success, Transaction id - {txn_id}'
@@ -132,6 +164,7 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
             work_obj.description = description
             work_obj.amount = amount
             work_obj.modified_by = user
+            work_obj.status = status
             work_obj.modified_date = datetime.now()
             work_obj.full_clean()
             work_obj.save()
@@ -151,6 +184,10 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
         raise ValidationError(err)
     except CryptoCredentials.DoesNotExist:
         err = f'Crypto Credentials method does not exist, email - {settings.EMAIL_HOST_USER}'
+        service_log.log_save('Work Edit', err, user.username, 0)
+        raise ValidationError(err)
+    except UserProfile.DoesNotExist:
+        err = f'User profile does not exist, user id - {user.id}'
         service_log.log_save('Work Edit', err, user.username, 0)
         raise ValidationError(err)
 

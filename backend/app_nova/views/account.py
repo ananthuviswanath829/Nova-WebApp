@@ -19,6 +19,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['is_superuser'] = user.is_superuser
         token['is_verified_user'] = user.userprofile_set.get(is_active=True).is_verified
+        activate_sudo_node(user)
         return token
 
 

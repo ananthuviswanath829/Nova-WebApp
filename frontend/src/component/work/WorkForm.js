@@ -13,7 +13,7 @@ import { FormControl } from '@mui/material';
 
 const WorkForm = props => {
   const statusList = ['Pending', 'Assigned', 'In Progress', 'Blocked', 'Completed'];
-  const paymentMethodList = ['Etherium', 'SudoCoin'];
+  const paymentMethodList = ['Etherium', 'Super Coin'];
 
   const submitForm = e => {
     e.preventDefault();
@@ -60,41 +60,43 @@ const WorkForm = props => {
           </Grid>
         </Grid>
 
-        <Grid container spacing={2} style={{display : 'flex',  marginLeft: '-30px'}}>
+        <Grid container spacing={2} style={{display : 'flex'}}>
           <Grid item xs={12} md={6}>
-            { props.mode === 'create' &&
-              <FormControl>
-                <InputLabel id="friends">Friends</InputLabel>
-                <Select
-                  labelId="friends"
-                  id="friends"
-                  label="Friends"
-                  value={props.values.userId}
-                  onChange={props.handleInputChange('userId')}
-                  style={{width: '100%'}}
-                  defaultValue=""
-                >
-                  {
-                    props.friendsList.map((data, index) => (
-                      <MenuItem key={index} value={data.user_id}>{`${data.first_name} ${data.last_name}`}</MenuItem>
-                    ))
-                  }
-                </Select>
-              </FormControl>
-            }
-            { props.mode === 'edit' &&
-              <TextField
-                varient="outlined"
-                label="Assigned To"
-                name='workName'
-                value={props.values.assignedTo}
-                style={{marginTop: '1px', marginLeft: '-2px'}}
-                disabled
-              />
-            }
+            <Grid style={{marginLeft: '-15px', width: '100%'}}>
+              { props.mode === 'create' &&
+                <FormControl>
+                  <InputLabel id="friends">Friends</InputLabel>
+                  <Select
+                    labelId="friends"
+                    id="friends"
+                    label="Friends"
+                    value={props.values.userId}
+                    onChange={props.handleInputChange('userId')}
+                    defaultValue=""
+                  >
+                    {
+                      props.friendsList.map((data, index) => (
+                        <MenuItem key={index} value={data.user_id}>{`${data.first_name} ${data.last_name}`}</MenuItem>
+                      ))
+                    }
+                  </Select>
+                </FormControl>
+              }
+            </Grid>
+            <Grid style={{marginLeft: '-15px', width: '100%'}}>
+              { props.mode === 'edit' &&
+                <TextField
+                  varient="outlined"
+                  label="Assigned To"
+                  name='workName'
+                  value={props.values.assignedTo}
+                  disabled
+                />
+              }
+            </Grid>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} style={{marginLeft: '-15px'}}>
             <FormControl>
               <InputLabel id="status">Status</InputLabel>
               <Select

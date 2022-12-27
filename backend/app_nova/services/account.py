@@ -1,10 +1,6 @@
 import json #Ananthu
-import base64 #Ananthu
 import random #Ananthu
 import string #Ananthu
-
-from PIL import Image as pil_img
-from io import BytesIO #Ananthu
 
 from datetime import datetime #Ananthu
 from uuid import uuid4 #Ananthu
@@ -15,8 +11,8 @@ from django.core.mail import EmailMessage #Ananthu
 from django.conf import settings #Ananthu
 from django.db import transaction #Ananthu
 
-# from app_nova.views.payment import Blockchain #Ananthu
 from app_nova.services import service_log #Ananthu
+from app_nova.blockchain.blockchain import connect_node #Ananthu
 from app_nova.models import UserProfile, EmailVerificationCode, Skill, UserSkill, SearchPreference, CryptoCredentials, PaymentMethod #Ananthu
 
 
@@ -120,21 +116,6 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
         search_preference_obj = SearchPreference.objects.get(is_active=True, user=user)
         crypto_credentials_qs = CryptoCredentials.objects.filter(is_active=True, user=user)
         payment_method_obj = PaymentMethod.objects.get(is_active=True, name=payment_method)
-        
-        # # profile_pic = profile_pic.split(',')[-1]
-        # profile_pic_encoded = profile_pic.encode('ascii')
-
-        # with open('profile_pic.png', 'wb') as fh:
-        #     print(profile_pic_encoded)
-        #     fh.write(profile_pic_encoded.decode('base64'))
-        #     print('here')
-        # image = base64.b64decode(str(profile_pic))       
-        # fileName = 'test.jpeg'
-
-        # # imagePath = FILE_UPLOAD_DIR + fileName
-
-        # img = pil_img.open(BytesIO(image))
-        # img.save(fileName, 'jpeg')
 
         with transaction.atomic():
             user.first_name = first_name
@@ -205,3 +186,27 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
         err = f'Payment Method does not exist - {payment_method}'
         service_log.log_save('Profile Edit', err, user.username, 0)
         raise ValidationError(err)
+
+
+def activate_sudo_node(user):
+    node_address = str(uuid4()).replace('-', '')
+    cryptocredentials_qs = CryptoCredentials.objects.filter(is_active=True)
+    while cryptocredentials_qs.filter(super_coin_node_address=node_address).exists():
+        node_address = str(uuid4()).replace('-', '')
+    
+    user_crypto_qs = cryptocredentials_qs.filter(user=user)
+    if not user_crypto_qs.exists():
+        crypto_obj = CryptoCredentials(
+            user = user,
+            super_coin_node_address = node_address,
+        )
+        crypto_obj.full_clean()
+        crypto_obj.save()
+    else:
+        crypto_obj = user_crypto_qs[0]
+        if crypto_obj.super_coin_node_address is None:
+            crypto_obj.super_coin_node_address = node_address
+            crypto_obj.save()
+        else:
+            node_address = crypto_obj.super_coin_node_address
+    connect_node(node_address)

@@ -6,6 +6,7 @@ from django.conf import settings #Ananthu
 
 from app_nova.models import WorkPayment, Work, CryptoCredentials #Ananthu
 from app_nova.services import service_log #Ananthu
+from app_nova.blockchain.blockchain import send_super_coins #Ananthu
 
 
 ##Function to get users
@@ -48,6 +49,7 @@ def pay_user(request, work_id: int):
             service_log.log_save('Pay User', err, request.user.username, 0)
             raise ValidationError(err)
         
+        recipient = CryptoCredentials.objects.get(user=work_obj.assigned_to)
         if work_obj.payment_method.name == 'Etherium':
             balance, node_address, private_key = service_log.etherium_details_get(admin_obj)
             if work_obj.amount >= balance:
@@ -55,8 +57,25 @@ def pay_user(request, work_id: int):
                 service_log.log_save('Pay User', err, user.username, 0)
                 raise ValidationError(err)
             
-            recipient = CryptoCredentials.objects.get(user=work_obj.assigned_to)
             txn_id = service_log.send_etherium(node_address, private_key, recipient.node_address, work_obj.amount)
+        else:
+            amount = work_obj.amount
+            adminprofile_obj = admin_obj.userprofile_set.get(is_active=True)
+            userprofile_obj = work_obj.assigned_to.userprofile_set.get(is_active=True)
+            balance = adminprofile_obj.super_coins
+            if amount > balance:
+                err = 'You dont have suffiecient balance'
+                service_log.log_save('Work Edit', err, user.username, 0)
+                raise ValidationError(err)
+            
+            node_address = recipient.super_coin_node_address
+            admin_node_address = admin_obj.cryptocredentials_set.get(is_active=True).super_coin_node_address
+
+            txn_id = send_super_coins(admin_node_address, node_address, amount)
+            userprofile_obj.super_coins = userprofile_obj.super_coins + amount
+            userprofile_obj.save()
+            adminprofile_obj.super_coins = adminprofile_obj.super_coins - amount
+            adminprofile_obj.save()
                 
         service_log.work_payment_create(work_obj, txn_id, work_obj.payment_method, admin_obj, work_obj.assigned_to, work_obj.amount, 'Paid to user - Manual', user)
         msg = f'Payment success, Transaction id - {txn_id}'

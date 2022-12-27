@@ -8,4 +8,5 @@ urlpatterns = [
     path('etherium/', include('app_nova.urls.work')),
     path('', include('app_nova.urls.usermngmnt')),
     path('admin/', include('app_nova.urls.admin')),
+    path('', include('app_nova.urls.blockchain')),
 ]

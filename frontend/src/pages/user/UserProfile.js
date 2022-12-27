@@ -40,6 +40,8 @@ const UserProfilePage = () => {
     paymentMethod: '',
     userPerHourRate: '',
     userRating: '',
+    superCoinNodeAddress: '',
+    superCoins: '',
   };
 
   const {values, setValues} = useForm(initialValues);
@@ -53,7 +55,7 @@ const UserProfilePage = () => {
   };
 
   const [apiRes, setApiRes] = useState(resObj);
-  const [nodeAddress, setNodeAddress] = useState('');
+  const [ethNodeAddress, setEthNodeAddress] = useState('');
   const [balance, setBalance] = useState('');
 
   useEffect(() => {
@@ -65,6 +67,7 @@ const UserProfilePage = () => {
       const response = await api.get('/api/user/profile/get');
 
       if (response.status === 200) {
+        console.log(response.data);
         getStatus();
         setValues({
           ...values, 
@@ -81,6 +84,8 @@ const UserProfilePage = () => {
           userPerHourRate: response.data.user_per_hour_rate,
           userRating: response.data.user_rating,
           image: response.data.profile_pic,
+          superCoinNodeAddress: response.data.super_coin_node_address,
+          superCoins: response.data.super_coins,
         });
         setApiRes({
           ...apiRes,
@@ -103,7 +108,7 @@ const UserProfilePage = () => {
       const response = await api.get('/api/etherium/status/get');
 
       if (response.status === 200) {
-        setNodeAddress(response.data.node_address);
+        setEthNodeAddress(response.data.node_address);
         setBalance(response.data.balance);
       }
     } catch (err) {
@@ -126,7 +131,7 @@ const UserProfilePage = () => {
         <UserCard data={values} />
         <SkillCard data={values} />
         <SearchPreference data={values} />
-        <PaymentCard nodeAddress={nodeAddress} balance={balance} />
+        <PaymentCard nodeAddress={ethNodeAddress} balance={balance} superCoinNodeAddress={values.superCoinNodeAddress} superCoins={values.superCoins} />
       </Container>
       </ThemeProvider>
       <ErrorModal apiRes={apiRes} setApiRes={setApiRes} />

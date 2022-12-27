@@ -50,11 +50,13 @@ class UserProfileGetSerializer(serializers.Serializer):
     per_hour_rate = serializers.SerializerMethodField()
     availability = serializers.SerializerMethodField()
     rating = serializers.SerializerMethodField()
-    node_address = serializers.SerializerMethodField()
-    private_key = serializers.SerializerMethodField()
+    eth_node_address = serializers.SerializerMethodField()
+    eth_private_key = serializers.SerializerMethodField()
     user_per_hour_rate = serializers.SerializerMethodField()
     payment_method = serializers.SerializerMethodField()
     user_rating = serializers.SerializerMethodField()
+    super_coin_node_address = serializers.SerializerMethodField()
+    super_coins = serializers.SerializerMethodField()
 
     def get_profile_pic(self, obj):
         profile_pic = obj.userprofile_set.get(is_active=True, user=obj).profile_pic
@@ -84,13 +86,13 @@ class UserProfileGetSerializer(serializers.Serializer):
         preference_qs = obj.searchpreference_set.filter(is_active=True, user=obj)
         return preference_qs[0].rating if preference_qs.exists() else ''
     
-    def get_node_address(self, obj):
+    def get_eth_node_address(self, obj):
         crypto_credentials_qs = obj.cryptocredentials_set.filter(is_active=True, user=obj)
-        return crypto_credentials_qs[0].node_address if crypto_credentials_qs.exists() else ''
+        return crypto_credentials_qs[0].eth_node_address if crypto_credentials_qs.exists() else ''
     
-    def get_private_key(self, obj):
+    def get_eth_private_key(self, obj):
         crypto_credentials_qs = obj.cryptocredentials_set.filter(is_active=True, user=obj)
-        return crypto_credentials_qs[0].private_key if crypto_credentials_qs.exists() else ''
+        return crypto_credentials_qs[0].eth_private_key if crypto_credentials_qs.exists() else ''
     
     def get_payment_method(self, obj):
         payment_method_obj = obj.userprofile_set.get(is_active=True, user=obj).payment_method
@@ -102,3 +104,9 @@ class UserProfileGetSerializer(serializers.Serializer):
     
     def get_user_rating(self, obj):
         return str(obj.userprofile_set.get(is_active=True, user=obj).rating)
+    
+    def get_super_coin_node_address(self, obj):
+        return obj.cryptocredentials_set.get(is_active=True, user=obj).super_coin_node_address
+    
+    def get_super_coins(self, obj):
+        return obj.userprofile_set.get(is_active=True, user=obj).super_coins
