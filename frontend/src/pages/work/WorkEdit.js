@@ -46,6 +46,7 @@ const WorkEditPage = () => {
     paymentMethod: '',
     amount: '',
     rating: 0,
+    isSuccess: false,
   };
 
   const {values, setValues, handleInputChange} = useForm(initialValues);
@@ -111,6 +112,7 @@ const WorkEditPage = () => {
         payment_method: values.paymentMethod,
         amount: values.amount,
         rating: values.rating,
+        is_success: values.isSuccess,
       });
 
       if (response.status === 200) {

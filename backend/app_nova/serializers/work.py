@@ -77,6 +77,7 @@ class WorkEditSerializer(serializers.Serializer):
     payment_method = serializers.CharField(required=True, allow_blank=False)
     amount = serializers.DecimalField(max_digits=10, decimal_places=4, required=True)
     rating = serializers.DecimalField(max_digits=2, decimal_places=1, required=True)
+    is_success = serializers.BooleanField(required=False)
 
 
 ##Serializer for comment save

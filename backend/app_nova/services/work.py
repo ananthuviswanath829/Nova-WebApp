@@ -66,7 +66,7 @@ def work_get(request):
 ##Function to edit work
 #Author-Ananthu
 def work_edit(request, work_id: int, work_name: str, start_date: date, end_date: date, status: str, 
-                user_id: int, description: str, payment_method: str, amount: Decimal, rating: Decimal):
+                user_id: int, description: str, payment_method: str, amount: Decimal, rating: Decimal, is_success: bool):
     try:
         user = request.user
         assigned_to = User.objects.get(is_active=True, id=user_id)
@@ -90,7 +90,7 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
                         service_log.log_save('Work Edit', err, user.username, 0)
                         raise ValidationError(err)
                     
-                    txn_id = service_log.send_etherium(node_address, private_key, recipient.node_address, amount)
+                    txn_id = service_log.send_etherium(node_address, private_key, recipient.eth_node_address, amount)
                 else:
                     userprofile_obj = user.userprofile_set.get(is_active=True)
                     balance = userprofile_obj.super_coins
@@ -118,12 +118,17 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
 
                 work_obj.rating = rating
                 work_obj.status = status
+                work_obj.is_success = is_success
                 work_obj.save()
                 
                 msg = 'Work edited successfully. Admin will manually process the payment.'
 
                 work_avg_rating = Work.objects.filter(is_active=True, assigned_to=work_obj.assigned_to, status='Completed', rating__isnull=False).aggregate(avg_rating=Avg('rating'))
-                work_obj.assigned_to.userprofile_set.filter(is_active=True).update(rating=work_avg_rating['avg_rating'])
+                work_success_rate_qs = Work.objects.filter(is_active=True, assigned_to=work_obj.assigned_to, status='Completed', is_success__isnull=False)
+                success_rate = 0
+                if work_success_rate_qs.exists():
+                    success_rate = work_success_rate_qs.filter(is_success=True).count() / work_success_rate_qs.count()
+                work_obj.assigned_to.userprofile_set.filter(is_active=True).update(rating=work_avg_rating['avg_rating'], success_rate=(success_rate*100))
 
                 if rating >= 3:
                     recipient = CryptoCredentials.objects.get(user=work_obj.assigned_to)
@@ -134,7 +139,7 @@ def work_edit(request, work_id: int, work_name: str, start_date: date, end_date:
                             service_log.log_save('Work Edit', err, admin_obj.username, 0)
                             raise ValidationError(err)
                         
-                        txn_id = service_log.send_etherium(node_address, private_key, recipient.node_address, work_obj.amount)
+                        txn_id = service_log.send_etherium(node_address, private_key, recipient.eth_node_address, work_obj.amount)
                     else:
                         adminprofile_obj = admin_obj.userprofile_set.get(is_active=True)
                         userprofile_obj = work_obj.assigned_to.userprofile_set.get(is_active=True)

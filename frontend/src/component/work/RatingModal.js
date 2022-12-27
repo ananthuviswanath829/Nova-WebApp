@@ -4,6 +4,11 @@ import Modal from '@mui/material/Modal';
 import Rating from '@mui/material/Rating';
 import { Button } from '@mui/material';
 import Stack from '@mui/material/Stack';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 const style = {
   position: 'absolute',
@@ -22,6 +27,14 @@ const RatingModal = props => {
   const handleClose = () => {
     props.setShowRatingModal(false);
   };
+
+  const handleChange = e => {
+    const val = e.target.value == 'success';
+    props.setValues({
+      ...props.values,
+      isSuccess: val,
+    });
+  }
 
   return (
     <div>
@@ -47,6 +60,18 @@ const RatingModal = props => {
                 });
               }}
             />
+
+            <FormControl>
+              <FormLabel id="demo-row-radio-buttons-group-label">Do you consider the work as a success?</FormLabel>
+              <RadioGroup
+                row
+                aria-labelledby="demo-row-radio-buttons-group-label"
+                name="row-radio-buttons-group"
+              >
+                <FormControlLabel value="success" control={<Radio />} label="Yes" onChange={handleChange} />
+                <FormControlLabel value="failure" control={<Radio />} label="No" onChange={handleChange} />
+              </RadioGroup>
+            </FormControl>
             <Button variant='outlined' onClick={props.submitForm}>Save</Button>
           </Stack>
         </Box>
