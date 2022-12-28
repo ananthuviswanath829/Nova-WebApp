@@ -42,6 +42,7 @@ const UserProfilePage = () => {
     userRating: '',
     superCoinNodeAddress: '',
     superCoins: '',
+    successRate: '',
   };
 
   const {values, setValues} = useForm(initialValues);
@@ -86,6 +87,7 @@ const UserProfilePage = () => {
           image: response.data.profile_pic,
           superCoinNodeAddress: response.data.super_coin_node_address,
           superCoins: response.data.super_coins,
+          successRate: response.data.success_rate,
         });
         setApiRes({
           ...apiRes,

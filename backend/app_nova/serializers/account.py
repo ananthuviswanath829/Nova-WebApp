@@ -57,6 +57,7 @@ class UserProfileGetSerializer(serializers.Serializer):
     user_rating = serializers.SerializerMethodField()
     super_coin_node_address = serializers.SerializerMethodField()
     super_coins = serializers.SerializerMethodField()
+    success_rate = serializers.SerializerMethodField()
 
     def get_profile_pic(self, obj):
         profile_pic = obj.userprofile_set.get(is_active=True, user=obj).profile_pic
@@ -110,3 +111,6 @@ class UserProfileGetSerializer(serializers.Serializer):
     
     def get_super_coins(self, obj):
         return obj.userprofile_set.get(is_active=True, user=obj).super_coins
+    
+    def get_success_rate(self, obj):
+        return obj.userprofile_set.get(is_active=True, user=obj).success_rate

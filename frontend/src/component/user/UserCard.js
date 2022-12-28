@@ -41,10 +41,13 @@ function UserCard(props) {
             <Typography variant="subtitle1" paragraph>
               Rating - {data.userRating}
             </Typography>
+            <Typography variant="subtitle1" paragraph>
+              Success Rate - {data.successRate}%
+            </Typography>
           </CardContent>
           <CardMedia
             component="img"
-            sx={{ width: 300, height: 250, display: { xs: 'none', sm: 'block' } }}
+            sx={{ width: 300, height: 268, display: { xs: 'none', sm: 'block' } }}
             image={data.image}
             alt={data.imageLabel}
           />

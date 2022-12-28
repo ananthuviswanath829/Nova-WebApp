@@ -1,11 +1,10 @@
 from datetime import datetime, date, timedelta #Ananthu
 
 from django.core.exceptions import ValidationError #Ananthu
-from django.db.models import F, Sum #Ananthu
 from django.db import transaction #Ananthu
 
 from app_nova.services import service_log #Ananthu
-from app_nova.models import UserTask, UserProfile #Ananthu
+from app_nova.models import UserTask #Ananthu
 
 
 ##Function to create Task
@@ -26,12 +25,6 @@ def task_create(request, task_name: str, task_date: date, start_time: timedelta,
         task_obj.full_clean()
         task_obj.save()
 
-        if task_name.lower() == 'open to work':
-            end_time_delta = timedelta(hours=end_time.hour,  minutes=end_time.minute, seconds=end_time.second)
-            start_time_delta = timedelta(hours=start_time.hour,  minutes=start_time.minute, seconds=start_time.second)
-            delta = end_time_delta - start_time_delta
-            user.userprofile_set.filter(is_active=True).update(availability=F('availability') + delta)
-
 
 ##Function to edit task
 #Autho-Ananthu
@@ -49,22 +42,6 @@ def task_edit(request, task_id: int, task_name: str, task_date: date, start_time
             task_obj.modified_date = datetime.now()
             task_obj.full_clean()
             task_obj.save()
-
-            if task_name.lower() == 'open to work':
-                total_time = UserTask.objects.filter(
-                        is_active = True, user = user, task_name__iexact = 'open to work'
-                    ).exclude(
-                        id = task_id
-                    ).annotate(
-                        available_time = F('end_time') - F('start_time')
-                    ).aggregate(
-                        total_time = Sum('available_time')
-                )['total_time']
-                total_time = timedelta(minutes=0) if total_time is None else total_time
-                end_time_delta = timedelta(hours=end_time.hour,  minutes=end_time.minute, seconds=end_time.second)
-                start_time_delta = timedelta(hours=start_time.hour,  minutes=start_time.minute, seconds=start_time.second)
-                delta = end_time_delta - start_time_delta
-                user.userprofile_set.filter(is_active=True).update(availability=total_time + delta)
     except UserTask.DoesNotExist:
         err = f'Task does not exist, id - {task_id}'
         service_log.log_save('Task Edit', err, user.username, 0)
@@ -84,12 +61,6 @@ def task_delete(request, task_id: int):
             task_obj.modified_date = datetime.now()
             task_obj.full_clean()
             task_obj.save()
-
-            if task_obj.task_name.lower() == 'open to work':
-                end_time_delta = timedelta(hours=task_obj.end_time.hour,  minutes=task_obj.end_time.minute, seconds=task_obj.end_time.second)
-                start_time_delta = timedelta(hours=task_obj.start_time.hour,  minutes=task_obj.start_time.minute, seconds=task_obj.start_time.second)
-                delta = end_time_delta - start_time_delta
-                user.userprofile_set.filter(is_active=True).update(availability=F('availability') - delta)
     except UserTask.DoesNotExist:
         err = f'Task does not exist, id - {task_id}'
         service_log.log_save('Task Delete', err, request.user.username, 0)

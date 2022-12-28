@@ -1,4 +1,4 @@
-from datetime import datetime #Ananthu
+from datetime import datetime, date, timedelta #Ananthu
 
 from django.contrib.auth.models import User #Ananthu
 from django.db.models import Q, Value #Ananthu
@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError #Ananthu
 from django.contrib.postgres.search import SearchVector, SearchQuery #Ananthu
 from django.db.models.functions import Concat #Ananthu
 
-from app_nova.models import Friends, UserSkill, UserProfile, SearchPreference #Ananthu
+from app_nova.models import Friends, UserSkill, UserProfile, SearchPreference, UserTask #Ananthu
 from app_nova.services import service_log #Ananthu
 from app_nova.recommendation.fuzzy_controller import UserController #Ananthu
 
@@ -152,13 +152,23 @@ def user_pereference_get(preference_obj):
     return pref_experience, pref_per_hour_rate, pref_availability, pref_rating
 
 
+##Function to get user availablity
+#Author-Ananthu
+def get_user_availabilty(user, date_list):
+    user_tasks_qs = UserTask.objects.filter(is_active=True, user=user, task_name__iexact='Open to work', task_date__in=date_list)
+    total_time = 0
+    for task_obj in user_tasks_qs:
+        total_time += task_obj.end_time - task_obj.start_time
+    return total_time
+
+
 ##Function to extract user data
 #Author-Ananthu
 def extract_user_data(user_id_list, skill):
     try:
         users_qs = User.objects.filter(is_active=True, is_superuser=False, id__in=user_id_list)
+        date_list =  get_dates_list(date.today(), 1, 7)
         data_list = []
-
         for user in users_qs:
             skill_obj = user.userskill_set.get(is_active=True, skill__name__iexact=skill)
             profile_obj = user.userprofile_set.get(is_active=True)
@@ -168,7 +178,8 @@ def extract_user_data(user_id_list, skill):
                 'experience': skill_obj.experience,
                 'rating': profile_obj.rating,
                 'per_hour_rate': profile_obj.per_hour_rate,
-                'availability': 5,
+                'success_rate': profile_obj.success_rate,
+                'availability': get_user_availabilty(user, date_list),
             }
             data_list.append(data_dict)
         
@@ -201,3 +212,12 @@ def user_details_get(logged_in_user, user_obj):
         'status':  status,
     }
     return user_dict
+
+
+##Function to get week dates
+#Author-Ananthu
+def get_dates_list(base_date, start_day, end_day=None):
+    monday = base_date - timedelta(days=base_date.isoweekday() - 1)
+    week_dates = [monday + timedelta(days=i) for i in range(7)]
+    week_dates = week_dates[start_day - 1:end_day or start_day]
+    return list(filter(lambda x: (base_date <= x), week_dates))
