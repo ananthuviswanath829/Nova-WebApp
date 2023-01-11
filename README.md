@@ -27,4 +27,14 @@ EMAIL_HOST_PASSWORD=
 EMAIL_PORT=
 ETHERIUM_URL=
 
-In order to pay using Ethereum, please install Ganache on your system.
+In order to pay using Ethereum in test environement, please install Ganache on your system and make sure it is running when you perform Ethereum related tasks.
+download link - https://trufflesuite.com/ganache/
+
+Command to build react app - 
+npm run build
+
+command to create or modify tables
+python manage.py makemigrations and python manage.py migrate
+
+Command to run server
+python manage.py runserver
