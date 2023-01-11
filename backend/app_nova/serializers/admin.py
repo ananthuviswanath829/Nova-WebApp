@@ -28,7 +28,7 @@ class TransactionListGetSerializer(serializers.Serializer):
     rating = serializers.SerializerMethodField()
 
     def get_amount(self, obj):
-        payment_method = 'ETH' if obj.payment_method.name == 'Etherium' else 'SC'
+        payment_method = 'ETH' if obj.payment_method.name == 'Ethereum' else 'SC'
         return f'{payment_method} {str(round(obj.amount, 2))}'
 
     def get_work_name(self, obj):
@@ -55,7 +55,7 @@ class PaymentPendingListGetSerializer(serializers.Serializer):
     rating = serializers.SerializerMethodField()
     
     def get_amount(self, obj):
-        payment_method = 'ETH' if obj.payment_method.name == 'Etherium' else 'SC'
+        payment_method = 'ETH' if obj.payment_method.name == 'Ethereum' else 'SC'
         return f'{payment_method} {str(round(obj.amount, 2))}'
 
     def get_paid_from(self, obj):
