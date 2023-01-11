@@ -40,6 +40,7 @@ const UserProfileEditPage = () => {
     perHourRate: '',
     availability: '',
     rating: '',
+    successRate: '',
     nodeAddress: '',
     privateKey: '',
     paymentMethod: '',
@@ -52,6 +53,7 @@ const UserProfileEditPage = () => {
     experience: ['Junior', 'Mid Level', 'Senior'],
     availability: ['Low', 'Medium', 'High'],
     rating: ['Very Poor', 'Poor', 'Weak', 'Good', 'Very Good', 'Excellent'],
+    successRate: ['Low', 'Medium', 'High'],
   };
 
   const config2 = {
@@ -132,10 +134,11 @@ const UserProfileEditPage = () => {
           perHourRate: response.data.per_hour_rate,
           availability: response.data.availability,
           rating: response.data.rating,
-          nodeAddress: response.data.node_address,
-          privateKey: response.data.private_key,
+          nodeAddress: response.data.eth_node_address,
+          privateKey: response.data.eth_private_key,
           perHourCost: response.data.user_per_hour_rate,
           paymentMethod: response.data.payment_method,
+          successRate: response.data.pref_success_rate,
         });
         setExperienceList(response.data.skills_list);
       }
@@ -167,6 +170,7 @@ const UserProfileEditPage = () => {
         per_hour_rate: values.perHourRate,
         availability: values.availability,
         rating: values.rating,
+        success_rate: values.successRate,
         node_address: values.nodeAddress,
         private_key: values.privateKey,
         payment_method: values.paymentMethod,
@@ -473,6 +477,29 @@ const UserProfileEditPage = () => {
                     }
                   </Select>
                 </FormControl>
+              </Grid>
+
+              <Grid container spacing={2} style={{display : 'flex', marginLeft: '0px'}}>
+                <Grid item xs={12} md={6}>
+                  <FormControl>
+                    <InputLabel id="successRate">Success Rate</InputLabel>
+                    <Select
+                      labelId="successRate"
+                      id="successRate"
+                      value={values.successRate}
+                      label="Success Rate"
+                      name='successRate'
+                      onChange={handleInputChange('successRate')}
+                      style={{width: '100%'}}
+                    >
+                      {
+                        preferenceList.successRate.map((data, index) => (
+                          <MenuItem key={index} value={data}>{data}</MenuItem>
+                        ))
+                      }
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

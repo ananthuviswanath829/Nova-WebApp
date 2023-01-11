@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = 'Create Payment Method'
 
     def handle(self, *args, **options):
-        method_list = ['Etherium', 'SudoCoin']
+        method_list = ['Ethereum', 'SudoCoin']
         user_obj = User.objects.filter(is_superuser=True)[0]
         
         for skill in method_list:

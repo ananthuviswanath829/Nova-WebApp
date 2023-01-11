@@ -31,6 +31,7 @@ class UserProfileEditSerializer(serializers.Serializer):
     per_hour_rate = serializers.CharField(required=True, allow_blank=False)
     availability = serializers.CharField(required=True, allow_blank=False)
     rating = serializers.CharField(required=True, allow_blank=False)
+    success_rate = serializers.CharField(required=True, allow_blank=False)
     node_address = serializers.CharField(required=False, allow_blank=True)
     private_key = serializers.CharField(required=False, allow_blank=True)
     payment_method = serializers.CharField(required=False, allow_blank=True)
@@ -58,6 +59,7 @@ class UserProfileGetSerializer(serializers.Serializer):
     super_coin_node_address = serializers.SerializerMethodField()
     super_coins = serializers.SerializerMethodField()
     success_rate = serializers.SerializerMethodField()
+    pref_success_rate = serializers.SerializerMethodField()
 
     def get_profile_pic(self, obj):
         profile_pic = obj.userprofile_set.get(is_active=True, user=obj).profile_pic
@@ -86,6 +88,10 @@ class UserProfileGetSerializer(serializers.Serializer):
     def get_rating(self, obj):
         preference_qs = obj.searchpreference_set.filter(is_active=True, user=obj)
         return preference_qs[0].rating if preference_qs.exists() else ''
+    
+    def get_pref_success_rate(self, obj):
+        preference_qs = obj.searchpreference_set.filter(is_active=True, user=obj)
+        return preference_qs[0].success_rate if preference_qs.exists() else ''
     
     def get_eth_node_address(self, obj):
         crypto_credentials_qs = obj.cryptocredentials_set.filter(is_active=True, user=obj)

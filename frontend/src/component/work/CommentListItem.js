@@ -18,7 +18,7 @@ const CommentListItem = props => {
   return (
     <div style={{ display: 'flex' }}>
       <div style={{ marginTop: '12px' }}>
-        <span style={circle}>A</span>
+        <span style={circle}>{`${props.data.full_name[0]}`}</span>
       </div>
 
       <div style={{ width: '95%', marginLeft: '10px' }}>

@@ -39,6 +39,7 @@ def user_register(request, first_name: str, last_name: str, email: str, password
     per_hour_rate = 'Low'
     availability = 'Medium'
     rating = 'Good'
+    success_rate = 'Medium'
 
     with transaction.atomic():
         user_obj = User(
@@ -63,6 +64,7 @@ def user_register(request, first_name: str, last_name: str, email: str, password
             per_hour_rate = per_hour_rate,
             availability = availability,
             rating = rating,
+            success_rate = success_rate,
             created_by = user_obj,
             modified_by = user_obj,
         )
@@ -76,12 +78,12 @@ def user_register(request, first_name: str, last_name: str, email: str, password
         email_code_obj.full_clean()
         email_code_obj.save()
     
-    subject = 'Nova Account Verification'
+    subject = 'FlexiHire Account Verification'
     content = f'Hi {first_name}, \n\n'
     content += 'Thank you for registering with us. \n'
     content += f'Your email verification link - {settings.EMAIL_URL}/account/verification/{token} \n\n'
     content += 'Regards, \n'
-    content += 'Team Nova'
+    content += 'Team FlexiHire'
     from_email = settings.EMAIL_HOST_USER
     email = EmailMessage(subject, content, from_email, to=[email])
     email.send()
@@ -105,7 +107,7 @@ def verify_token(token):
 
 ##Function to edit user profile
 #Author-Ananthu
-def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob: datetime, profile_pic: str, skills_list: str, experience: str, 
+def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob: datetime, profile_pic: str, skills_list: str, experience: str, success_rate: str,
                         per_hour_rate: str, availability: str, rating: str, node_address: str, private_key: str, payment_method: str, per_hour_cost: str):
     try:
         skills_list = json.loads(skills_list)
@@ -133,6 +135,7 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
             search_preference_obj.per_hour_rate = per_hour_rate
             search_preference_obj.availability = availability
             search_preference_obj.rating = rating
+            search_preference_obj.success_rate = success_rate
             search_preference_obj.save()
 
             UserSkill.objects.filter(is_active=True, user=user).update(is_active=False)
@@ -161,13 +164,13 @@ def user_profile_Edit(request, first_name: str, last_name: str, email: str, dob:
             if not crypto_credentials_qs.exists():
                 crypto_credentials_obj = CryptoCredentials(
                     user = user,
-                    node_address = node_address,
-                    private_key = private_key,
+                    eth_node_address = node_address,
+                    eth_private_key = private_key,
                 )
             else:
                 crypto_credentials_obj = crypto_credentials_qs[0]
-                crypto_credentials_obj.node_address = node_address
-                crypto_credentials_obj.private_key = private_key
+                crypto_credentials_obj.eth_node_address = node_address
+                crypto_credentials_obj.eth_private_key = private_key
             crypto_credentials_obj.full_clean()
             crypto_credentials_obj.save()
     except UserProfile.DoesNotExist:

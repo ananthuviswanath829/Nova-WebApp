@@ -13,7 +13,7 @@ import { FormControl } from '@mui/material';
 
 const WorkForm = props => {
   const statusList = ['Pending', 'Assigned', 'In Progress', 'Blocked', 'Completed'];
-  const paymentMethodList = ['Etherium', 'Super Coin'];
+  const paymentMethodList = ['Ethereum', 'Super Coin'];
 
   const submitForm = e => {
     e.preventDefault();
@@ -106,7 +106,7 @@ const WorkForm = props => {
                 value={props.values.status}
                 onChange={props.handleInputChange('status')}
                 style={{width: '100%'}}
-                defaultValue=""
+                disabled={props.mode === 'create'}
               >
                 {
                   statusList.map((data, index) => (

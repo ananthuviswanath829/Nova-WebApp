@@ -57,7 +57,7 @@ def pay_user(request, work_id: int):
                 service_log.log_save('Pay User', err, user.username, 0)
                 raise ValidationError(err)
             
-            txn_id = service_log.send_etherium(node_address, private_key, recipient.node_address, work_obj.amount)
+            txn_id = service_log.send_etherium(node_address, private_key, recipient.eth_node_address, work_obj.amount)
         else:
             amount = work_obj.amount
             adminprofile_obj = admin_obj.userprofile_set.get(is_active=True)

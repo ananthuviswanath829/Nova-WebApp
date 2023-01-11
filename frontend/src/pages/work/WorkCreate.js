@@ -35,7 +35,7 @@ const WorkCreatePage = () => {
     workName: '',
     startDate: new Date(),
     endDate: new Date(),
-    status: '',
+    status: 'Pending',
     userId: '',
     description: '',
     showPayBtn: false,

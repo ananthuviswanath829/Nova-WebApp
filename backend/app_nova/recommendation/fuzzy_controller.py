@@ -22,7 +22,7 @@ class UserController:
     
 
     #Function to calculate scores
-    def calculate(self, pref_experience, pref_per_hour_rate, pref_availability, pref_rating):
+    def calculate(self, pref_experience, pref_per_hour_rate, pref_availability, pref_rating, pref_success_rate):
         self.user_set = {'user_id': [], 'score': []}
 
         for index in range(len(self.data)):
@@ -31,11 +31,12 @@ class UserController:
                 self.name.input['Pref Hourly Rate'] = float(pref_per_hour_rate)
                 self.name.input['Pref Experience'] = float(pref_experience)
                 self.name.input['Pref Availability'] = float(pref_availability)
+                self.name.input['Pref Success Rate'] = float(pref_success_rate)
                 self.name.input['Hourly Rate'] = float(self.data.per_hour_rate.iloc[index])
                 self.name.input['Rating'] = float(self.data.rating.iloc[index])
                 self.name.input['Availability'] = float(self.data.availability.iloc[index])
                 self.name.input['Experience'] = float(self.data.experience.iloc[index])
-                print(self.name.input)
+                self.name.input['Success Rate'] = float(self.data.success_rate.iloc[index])
 
                 self.name.compute()
                 self.user_set['user_id'].append(self.data.user_id.iloc[index])

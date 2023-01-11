@@ -244,7 +244,7 @@ export default function TopBar(props) {
             style={{ cursor: 'pointer'}}
             onClick={navigateToHome}
           >
-            NOVA
+            FlexiHire
           </Typography>
           <Search>
             <SearchIconWrapper>

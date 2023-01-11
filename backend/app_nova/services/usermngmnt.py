@@ -1,7 +1,7 @@
 from datetime import datetime, date, timedelta #Ananthu
 
 from django.contrib.auth.models import User #Ananthu
-from django.db.models import Q, Value #Ananthu
+from django.db.models import Q, Value, F #Ananthu
 from django.core.exceptions import ValidationError #Ananthu
 from django.contrib.postgres.search import SearchVector, SearchQuery #Ananthu
 from django.db.models.functions import Concat #Ananthu
@@ -9,6 +9,7 @@ from django.db.models.functions import Concat #Ananthu
 from app_nova.models import Friends, UserSkill, UserProfile, SearchPreference, UserTask #Ananthu
 from app_nova.services import service_log #Ananthu
 from app_nova.recommendation.fuzzy_controller import UserController #Ananthu
+
 
 ##Function to get users
 #Author-Ananthu
@@ -19,7 +20,7 @@ def search_users(request):
         all_users_qs = User.objects.annotate(full_name=Concat('first_name', Value(' '), 'last_name')).filter(is_active=True, is_superuser=False).exclude(id=request.user.id)
         user_profile_obj = user.userprofile_set.get(is_active=True)
         search_preference_obj = user.searchpreference_set.get(is_active=True)
-        pref_experience, pref_per_hour_rate, pref_availability, pref_rating = user_pereference_get(search_preference_obj)
+        pref_experience, pref_per_hour_rate, pref_availability, pref_rating, pref_success_rate = user_pereference_get(search_preference_obj)
         user_skill_qs = UserSkill.objects.select_related('user', 'skill').filter(user__is_active=True, user__is_superuser=False).exclude(user=request.user)
         recommended_result, skill_id_list = [], []
         if search_term not in [None, '']:
@@ -30,7 +31,7 @@ def search_users(request):
             skill_id_list = list(user_skill_qs.values_list('user__id', flat=True).distinct())
             user_controller_obj = UserController(extract_user_data(skill_id_list, search_term))
             user_controller_obj.create_sim_instance(request.user.username)
-            user_controller_obj.calculate(pref_experience, pref_per_hour_rate, pref_availability, pref_rating)
+            user_controller_obj.calculate(pref_experience, pref_per_hour_rate, pref_availability, pref_rating, pref_success_rate)
             result = user_controller_obj.results()
 
             for item in result:
@@ -112,8 +113,9 @@ def user_pereference_get(preference_obj):
     search_pref_per_hour_rate = preference_obj.per_hour_rate
     search_pref_availability = preference_obj.availability
     search_pref_rating = preference_obj.rating
+    search_pref_success_rate = preference_obj.success_rate
 
-    pref_experience = pref_per_hour_rate = pref_availability = pref_rating = 0
+    pref_experience = pref_per_hour_rate = pref_availability = pref_rating = pref_success_rate = 0
 
     if search_pref_experience == 'Junior':
         pref_experience = 2
@@ -149,16 +151,31 @@ def user_pereference_get(preference_obj):
     else:
         pref_rating = 5
     
-    return pref_experience, pref_per_hour_rate, pref_availability, pref_rating
+    if search_pref_success_rate == 'Low':
+        pref_success_rate = 30
+    elif search_pref_success_rate == 'Medium':
+        pref_success_rate = 50
+    else:
+        pref_success_rate = 80
+    
+    return pref_experience, pref_per_hour_rate, pref_availability, pref_rating, pref_success_rate
 
 
 ##Function to get user availablity
 #Author-Ananthu
 def get_user_availabilty(user, date_list):
-    user_tasks_qs = UserTask.objects.filter(is_active=True, user=user, task_name__iexact='Open to work', task_date__in=date_list)
-    total_time = 0
+    user_tasks_qs = UserTask.objects.filter(
+            is_active=True, user=user, task_name__iexact='Open to work', task_date__in=date_list
+        ).annotate(total_time=F('end_time') - F('start_time'))
+
+    seconds = 0
     for task_obj in user_tasks_qs:
-        total_time += task_obj.end_time - task_obj.start_time
+        seconds += task_obj.total_time.total_seconds()
+    
+    hour = seconds // 3600
+    seconds %= 3600
+    minutes = seconds // 60
+    total_time = hour + (minutes / 60)
     return total_time
 
 

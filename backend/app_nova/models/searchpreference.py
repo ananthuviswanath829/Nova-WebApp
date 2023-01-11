@@ -10,6 +10,7 @@ class SearchPreference(models.Model):
     per_hour_rate = models.TextField()
     availability = models.TextField()
     rating = models.TextField()
+    success_rate = models.TextField()
     is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
