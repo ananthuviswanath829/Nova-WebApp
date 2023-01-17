@@ -81,7 +81,7 @@ const UserProfileEditPage = () => {
   const [skillsList, setSkillsList] = useState([]);
   const [imageSrc, setImageSrc] = useState('');
   const [initialImage, setInitialImage] = useState('');
-  const paymentMethodList = ['Etherium', 'SudoCoin'];
+  const paymentMethodList = ['Ethereum', 'SuperCoin'];
 
   const handleExperienceChange = () => {
     if (skill !== '' && experience !== 0) { setExperienceList([...experienceList, {skill: skill, experience: experience}]); }
@@ -261,7 +261,7 @@ const UserProfileEditPage = () => {
           </Grid>
 
           <Grid style={{margin: '10px'}}>
-            <Typography component="h2" variant="h5">Etherium Details</Typography>
+            <Typography component="h2" variant="h5">Ethereum Details</Typography>
 
             <Grid container spacing={2} style={{display: 'flex', marginTop: '5px'}}>
               <Grid item xs={12} md={6}>

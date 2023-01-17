@@ -24,7 +24,7 @@ const PaymentCard = props => {
               Payment
             </Typography>
             <div style={{marginTop: '5px'}}>
-              <Typography variant='overline' style={{fontSize: '16px'}}>Etherium</Typography>
+              <Typography variant='overline' style={{fontSize: '16px'}}>Ethereum</Typography>
               <Typography>Node Address: {props.nodeAddress}</Typography>
               <Typography>No. of Blocks: {props.balance}</Typography>
             </div>
