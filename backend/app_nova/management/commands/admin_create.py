@@ -22,17 +22,17 @@ class Command(BaseCommand):
             userprofile_obj.full_clean()
             userprofile_obj.save()
 
-            sudo_coin_node_address='e36f0158f0aed45b3bc755dc52ed4560d'
+            super_coin_node_address='e36f0158f0aed45b3bc755dc52ed4560d'
             eth_node_address = '0x61D99D0746aD91581BB833c45264ea68F012C819'
             eth_private_key = 'cc25f0a47857a0bf900ebfe478f0c55118e314543242aa9dad4cdaffbb564bc6'
             crypto_obj = CryptoCredentials(
                 user = user_obj,
                 eth_node_address = eth_node_address,
                 eth_private_key = eth_private_key,
-                sudo_coin_node_address = sudo_coin_node_address,
+                super_coin_node_address = super_coin_node_address,
             )
             crypto_obj.full_clean()
             crypto_obj.save()
 
-            CryptoCredentials.objects.filter(user=user_obj).update(sudo_coin_node_address=sudo_coin_node_address)
+            CryptoCredentials.objects.filter(user=user_obj).update(super_coin_node_address=super_coin_node_address)
             self.stdout.write(self.style.SUCCESS('Admin created successfully'))
